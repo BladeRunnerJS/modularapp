@@ -1,7 +1,10 @@
+/* Blade container element */
+
 .messages {
   min-width: 400px;
 }
 
+/* individual message */
 .message {
   position: relative;
   overflow: auto;
