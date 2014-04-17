@@ -1,4 +1,17 @@
 /* Header Blade */
 .header {
   display: block;
+
+  margin-bottom:20px;
 }
+
+.chat-input,
+.messages {
+  display: block;
+}
+
+.messages {
+  margin-bottom: 20px;
+}
+
+.chat-input {}

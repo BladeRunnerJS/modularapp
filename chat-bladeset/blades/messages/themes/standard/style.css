@@ -1,14 +1,22 @@
-.message {}
+.messages {
+  min-width: 400px;
+}
 
-.message-user-id,
-.message-text,
-.message-timestamp {
-  display: inline-block;
+.message {
+  position: relative;
+  overflow: auto;
+
+  margin-bottom: 10px;
 }
 
 .message-user-id {
+  position: absolute;
+  top: 0;
+  left: 0;
+
   font-weight: bold;
   width: 100px;
+  margin-right: 5px;
   text-align: right;
 }
 
@@ -17,10 +25,29 @@
 }
 
 .message-text {
+  display: inline-block;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  /* space for userId */
+  padding-left: 104px;
+  /* space for timestamp */
+  padding-right: 100px;
+
+  width: 100%;
   min-width: 200px
 }
 
 .message-timestamp {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  width: 100px;
+
+  text-align: right;
   font-style: italic;
   font-size: small;
 }
