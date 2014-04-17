@@ -2,7 +2,19 @@ var InputViewModelTest = TestCase( 'InputViewModelTest' );
 
 var InputViewModel = require( 'modularapp/chat/input/InputViewModel' );
 
-InputViewModelTest.prototype.testSomething = function() {
+InputViewModelTest.prototype.testDefaultMessageIsEmpty = function() {
   var model = new InputViewModel();
-  assertEquals( 'Hello World!', model.message() );
+  assertEquals( '', model.message() );
+};
+
+InputViewModelTest.prototype.testEmptyMessageIsInvalid = function() {
+  var model = new InputViewModel();
+  model.message( '' );
+  assertFalse( model.buttonClicked() );
+};
+
+InputViewModelTest.prototype.testBlankMessageIsInvalid = function() {
+  var model = new InputViewModel();
+  model.message( '         ' );
+  assertFalse( model.buttonClicked() );
 };
