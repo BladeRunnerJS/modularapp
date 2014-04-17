@@ -1,16 +1,31 @@
 .chat-input {
   position: relative;
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+
+  /* push textarea in for button */
+  padding-right: 80px;
 }
 
 .chat-input .chat-input-message,
 .chat-input .chat-input-send-btn {
-  height: 100px;
+  height: 60px;
 }
 
 .chat-input .chat-input-message {
-  float: left;
+  display: block;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .chat-input .chat-input-send-btn {
-  float: left;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 75px;
+  text-align: center;
 }
