@@ -1,1 +1,16 @@
-/* theme styling goes here */
+.chat-input {
+  position: relative;
+}
+
+.chat-input .chat-input-message,
+.chat-input .chat-input-send-btn {
+  height: 100px;
+}
+
+.chat-input .chat-input-message {
+  float: left;
+}
+
+.chat-input .chat-input-send-btn {
+  float: left;
+}
