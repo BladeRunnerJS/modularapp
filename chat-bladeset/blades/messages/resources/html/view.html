@@ -1,4 +1,15 @@
 <div id="modularapp.chat.messages.view-template">
-	<div class="hello-world-message" data-bind="text:message"></div>
-	<button class="button" data-bind="click:buttonClicked">Log me</button>
+
+	<section class="messages">
+
+		<div data-bind="foreach: messages">
+			<div class="message">
+				<span class="message-user-id" data-bind="text: userId"></span>
+				<span class="message-text" data-bind="text: text"></span>
+				<span class="message-timestamp" data-bind="text: timestamp"></span>
+			</div>
+  	</div>
+
+	</section>
+
 </div>

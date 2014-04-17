@@ -1,1 +1,26 @@
-/* theme styling goes here */
+.message {}
+
+.message-user-id,
+.message-text,
+.message-timestamp {
+  display: inline-block;
+}
+
+.message-user-id {
+  font-weight: bold;
+  width: 100px;
+  text-align: right;
+}
+
+.message-user-id:after {
+  content:': ';
+}
+
+.message-text {
+  min-width: 200px
+}
+
+.message-timestamp {
+  font-style: italic;
+  font-size: small;
+}
