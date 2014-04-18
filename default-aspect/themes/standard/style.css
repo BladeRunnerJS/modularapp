@@ -1,5 +1,9 @@
 /* General layout styling of the Blades in the Aspect*/
 
+body {
+  padding: 0px 40px;
+}
+
 .header {
   display: block;
 
