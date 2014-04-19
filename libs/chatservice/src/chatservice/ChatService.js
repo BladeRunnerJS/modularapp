@@ -2,6 +2,9 @@
 
 /**
  * Interface/contract for chatting.
+ *
+ * Events (via emitr):
+ *   new-message - when a new message has been received by the service
  */
 function ChatService() {
 }
