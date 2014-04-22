@@ -1,8 +1,9 @@
 "use strict";
 
 var br = require( 'br/Core' );
-var ServiceRegistry = require( 'br/ServiceRegistry' );
 var ChatService = require( './ChatService' );
+var emitr = require( 'emitr' );
+var Log = require( 'fell' ).Log;
 
 /**
  * Events (via emitr):
@@ -10,9 +11,9 @@ var ChatService = require( './ChatService' );
  */
 function LocalChatService() {
   this._messages = [];
-  this._eventHub = ServiceRegistry.getService( 'br.event-hub' );
 }
 br.implement( LocalChatService, ChatService );
+emitr.mixInto( LocalChatService );
 
 /**
  * Send a message.
@@ -21,7 +22,10 @@ br.implement( LocalChatService, ChatService );
  */
 LocalChatService.prototype.sendMessage = function( message ) {
   this._messages.push( message );
-  this._eventHub.channel( 'chat' ).trigger( 'new-message', message );
+
+  Log.info( 'Trigger new-message: {0}', message );
+
+  this.trigger( 'new-message', message );
 };
 
 /**
