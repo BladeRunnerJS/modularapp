@@ -18,3 +18,11 @@ InputViewModelTest.prototype.testBlankMessageIsInvalid = function() {
   model.message( '         ' );
   assertFalse( model.buttonClicked() );
 };
+
+InputViewModelTest.prototype.testMessageWithValidValueIsClearedAfterButtonClicked = function() {
+  var model = new InputViewModel();
+  model.message( 'hello' );
+  model.buttonClicked();
+
+  assertEquals( '', model.message() );
+};
