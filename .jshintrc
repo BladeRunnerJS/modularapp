@@ -1,0 +1,6 @@
+{
+  "strict": true,
+  "unused": true,
+  "node"  : true,
+  "predef": [ "require", "module" ]
+}
