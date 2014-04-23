@@ -29,7 +29,11 @@ FireChatService.prototype.sendMessage = function( message ) {
 
 FireChatService.prototype.getMessages = function( listener ) {
   this._messagesRef.once( 'value', function( data ) {
-      listener.messagesRetrieved( data.val() );
+    var messages = [];
+    data.forEach( function( message ) {
+      messages.push( message.val() );
+    } );
+    listener.messagesRetrieved( messages );
   } );
 };
 
