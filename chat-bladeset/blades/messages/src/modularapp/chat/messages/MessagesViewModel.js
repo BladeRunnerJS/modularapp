@@ -10,14 +10,14 @@ function MessagesViewModel() {
 
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
 	this._chatService.getMessages( this );
-
-	this._chatService.on( 'new-message', this._addMessage, this );
 }
 
 MessagesViewModel.prototype.messagesRetrieved = function( messages ) {
 	messages.forEach( function( message ) {
 		this._addMessage( message );
 	}, this );
+
+	this._chatService.on( 'new-message', this._addMessage, this );
 };
 
 MessagesViewModel.prototype._addMessage = function( message ) {
