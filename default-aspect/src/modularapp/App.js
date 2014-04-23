@@ -11,6 +11,10 @@ var MessagesViewModel = require( 'modularapp/chat/messages/MessagesViewModel' );
 
 var App = function() {
 
+  var userService = ServiceRegistry.getService( 'user.service' );
+  var testUser = { userId: 'Guest_' + new Date().getTime() };
+  userService.setCurrentUser( testUser );
+
   // Create and add Header Blade
   var headerViewModel = new HeaderViewModel();
   var headerComponent =
@@ -31,10 +35,6 @@ var App = function() {
     new KnockoutComponent( 'modularapp.chat.input.view-template', inputViewModel );
   var inputEl = inputComponent.getElement();
   document.body.appendChild( inputEl );
-
-  var userService = ServiceRegistry.getService( 'user.service' );
-  var testUser = { userId: 'Guest_' + new Date().getTime() };
-  userService.setCurrentUser( testUser );
 
 };
 
