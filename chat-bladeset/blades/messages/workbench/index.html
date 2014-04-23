@@ -2,14 +2,14 @@
 <html>
 	<head>
 		<title>Workbench</title>
-		
+
 		<@css.bundle theme="standard"@/>
-		
+
 	</head>
 	<body>
 
 		<@js.bundle @/>
-		
+
 		<script type="text/javascript">
 			var ServiceRegistry = require( 'br/ServiceRegistry' );
 
@@ -38,7 +38,11 @@
 			// ViewModel that is being created in the workbench
 			var MessagesViewModel = require( 'modularapp/chat/messages/MessagesViewModel' );
 			var KnockoutComponent = require( 'br/knockout/KnockoutComponent' );
-			
+
+			var chatService = ServiceRegistry.getService( 'chat.service' );
+			chatService.sendMessage( { userId: 'leggetter', text: 'hello', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'andyberry88', text: 'Yo!', timestamp: new Date() } );
+
 			var model = new MessagesViewModel();
 			var component = new KnockoutComponent( 'modularapp.chat.messages.view-template', model );
 
