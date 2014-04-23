@@ -11,6 +11,7 @@ MessagesViewModelTest.prototype.testAddingAMessageIncreasesMessageCountByOne = f
   assertEquals( expectedMessageCount, model.messages().length );
 };
 
-// TODO:
+// TODO: implement.
+// Note: new-message is only bound after initial set of messages are retrieved.
 // MessagesViewModelTest.prototype.testModelAddsNewMessageToViewOnNewMessageEvent = function() {
 // };
