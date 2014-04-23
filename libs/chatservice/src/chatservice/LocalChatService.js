@@ -23,7 +23,7 @@ emitr.mixInto( LocalChatService );
 LocalChatService.prototype.sendMessage = function( message ) {
   this._messages.push( message );
 
-  Log.info( 'Trigger new-message: {0}', message );
+  Log.info( 'Trigger new-message: {0}', JSON.stringify( message ) );
 
   this.trigger( 'new-message', message );
 };
