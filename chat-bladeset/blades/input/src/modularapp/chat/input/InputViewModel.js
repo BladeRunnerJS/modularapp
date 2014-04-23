@@ -16,9 +16,14 @@ function InputViewModel() {
 }
 
 InputViewModel.prototype.buttonClicked = function() {
+	if( this._currentUser === null ) {
+		throw new Error( 'A currentUser must be set before messages can be sent' )
+	}
+
 	var message = this.message();
 	var valid = messageValid( message );
 	if( valid ) {
+
 		var chatMessage = {
 			userId: this._currentUser.userId,
 			text: message,
