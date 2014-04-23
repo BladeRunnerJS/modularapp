@@ -1,5 +1,7 @@
 'use strict';
 
+var ServiceRegistry = require( 'br/ServiceRegistry' );
+
 var KnockoutComponent = require( 'br/knockout/KnockoutComponent' );
 
 // require Blades
@@ -29,6 +31,10 @@ var App = function() {
     new KnockoutComponent( 'modularapp.chat.input.view-template', inputViewModel );
   var inputEl = inputComponent.getElement();
   document.body.appendChild( inputEl );
+
+  var userService = ServiceRegistry.getService( 'user.service' );
+  var testUser = { userId: 'Guest_' + new Date().getTime() };
+  userService.setCurrentUser( testUser );
 
 };
 

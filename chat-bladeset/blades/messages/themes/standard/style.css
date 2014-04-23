@@ -2,6 +2,7 @@
 
 .messages {
   min-width: 400px;
+  min-height: 200px;
 }
 
 /* individual message */
@@ -18,7 +19,7 @@
   left: 0;
 
   font-weight: bold;
-  width: 100px;
+  width: 150px;
   margin-right: 5px;
   text-align: right;
 }
@@ -35,7 +36,7 @@
   box-sizing: border-box;
 
   /* space for userId */
-  padding-left: 104px;
+  padding-left: 160px;
   /* space for timestamp */
   padding-right: 100px;
 
