@@ -10,3 +10,7 @@ MessagesViewModelTest.prototype.testAddingAMessageIncreasesMessageCountByOne = f
   model._addMessage( { userId: 'test', text: 'test text', timestamp: new Date() } );
   assertEquals( expectedMessageCount, model.messages().length );
 };
+
+// TODO:
+// MessagesViewModelTest.prototype.testModelAddsNewMessageToViewOnNewMessageEvent = function() {
+// };
