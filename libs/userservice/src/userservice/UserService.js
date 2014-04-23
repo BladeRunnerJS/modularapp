@@ -48,6 +48,8 @@ UserService.prototype.setCurrentUser = function( user ) {
  * Add a user to the current session. This indicates another user
  * that is using the application in another location.
  *
+ * @todo: This shouldn't be part of the public API.
+ *
  * @param {userservice.User} user
  */
 UserService.prototype.addUser = function( user ) {

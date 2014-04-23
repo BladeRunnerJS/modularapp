@@ -17,9 +17,16 @@ function ChatService() {
 ChatService.prototype.sendMessage = function( message ) {};
 
 /**
+ * Used to listen to users retrieval.
+ * @typedef {Object} ChatService~GetMessagesListener
+ * @property {Function} messagesRetrived - Messages retrieved successfully.
+ * @property {Function} messagesRetrievalFailed - Message retrieval failed.
+ */
+
+/**
  * Get a list of existing chat messages.
  *
- * @param {Object} listener - The object to be informed of chat message retrieval
+ * @param {GetMessagesListener} listener - The object to be informed of chat message retrieval
  *                            success or failure.
  */
 ChatService.prototype.getMessages = function( listener ) {};

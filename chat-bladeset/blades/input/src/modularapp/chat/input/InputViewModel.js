@@ -1,8 +1,10 @@
 'use strict';
 
+var br = require( 'br/Core' );
 var ko = require( 'ko' );
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 var Log = require( 'fell' ).Log;
+var User = require( 'userservice/User' );
 
 function InputViewModel() {
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
@@ -42,6 +44,10 @@ InputViewModel.prototype.buttonClicked = function() {
  * ChatService.getCurrentUser callback contract
  */
 InputViewModel.prototype.userRetrieved = function( user ) {
+	if( br.fulfills( user, User.prototype ) === false ) {
+		throw new Error( 'user must fulfill the User contract: ' + JSON.stringify( User ) );
+	}
+
 	this._currentUser = user;
 	this.enabled( true );
 }
