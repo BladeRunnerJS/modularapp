@@ -44,10 +44,10 @@ InputViewModelTest.prototype.testMessageWithValidValueIsClearedAfterButtonClicke
 
 InputViewModelTest.prototype.testCurrentUserMustBeSetBeforeMessagesCanBeSent = function() {
   var test = function() {
-    model.userRetrieved( null );
+    var noUserModel = new InputViewModel();
 
-    model.message( 'hello' );
-    model.buttonClicked();
+    noUserModel.message( 'hello' );
+    noUserModel.buttonClicked();
   };
 
   assertException( test, 'Error' );
