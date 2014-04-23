@@ -35,8 +35,12 @@ LocalChatService.prototype.sendMessage = function( message ) {
  *                            success or failure.
  */
 LocalChatService.prototype.getMessages = function( listener ) {
-  // shallow copy
-  return this._messages.slice( 0 );
+  // fake async
+  var self = this;
+  setTimeout( function() {
+    // shallow copy
+    listener.messagesRetrieved( self._messages.slice( 0 ) );
+  }, 0 );
 };
 
 module.exports = LocalChatService;
