@@ -36,4 +36,21 @@ UserService.prototype.getCurrentUser = function( listener ) {
 UserService.prototype.getUsers = function( listener ) {
 };
 
+/**
+ * Sets the active user for the current application session.
+ *
+ * @param {userservice.User} user
+ */
+UserService.prototype.setCurrentUser = function( user ) {
+};
+
+/**
+ * Add a user to the current session. This indicates another user
+ * that is using the application in another location.
+ *
+ * @param {userservice.User} user
+ */
+UserService.prototype.addUser = function( user ) {
+};
+
 module.exports = UserService;
