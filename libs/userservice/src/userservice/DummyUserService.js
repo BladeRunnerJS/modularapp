@@ -29,8 +29,6 @@ DummyUserService.prototype.getUsers = function( listener ) {
   }, 0 );
 };
 
-// DummyUserService functions
-
 DummyUserService.prototype.setCurrentUser = function( user ) {
   checkUser( user );
 
