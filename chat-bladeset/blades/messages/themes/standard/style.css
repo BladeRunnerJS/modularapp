@@ -2,7 +2,8 @@
 
 .messages {
   min-width: 400px;
-  min-height: 200px;
+  height: 200px;
+  overflow: auto;
 }
 
 /* individual message */
