@@ -1,0 +1,3 @@
+#depends: bootstrap, fontawesome
+css: bootstrap-social.css
+exports: null
