@@ -15,11 +15,12 @@ body {
   width: 300px;
   margin: auto;
   margin-top: 100px;
+  padding: 4px;
 
   border-radius: 5px;
   -webkit-box-shadow: 0 2px 3px rgba(0,0,0,.3);
   box-shadow: 0 2px 3px rgba(0,0,0,.3);
-  background: #FFF;
+  background: #f7f7f9;
 }
 
 .chat-input,
