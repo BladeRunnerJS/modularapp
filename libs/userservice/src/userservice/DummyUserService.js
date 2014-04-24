@@ -6,6 +6,7 @@ var User = require( './User' );
 
 function DummyUserService() {
   this._users = {};
+  this._listener;
 }
 br.implement( DummyUserService, UserService );
 
@@ -14,11 +15,20 @@ br.implement( DummyUserService, UserService );
 DummyUserService.prototype.getCurrentUser = function( listener ) {
   // fake async
   var self = this;
+  this._listener = listener;
   setTimeout( function() {
     var user = self._users[ self._currentUserId ];
     listener.userRetrieved( user );
   }, 0 );
 };
+
+DummyUserService.prototype.setCurrentUserFromServer = function( user ) {
+	if(this._listener){
+		this._listener.userRetrieved( user );
+	};
+}
+
+
 
 DummyUserService.prototype.getUsers = function( listener ) {
   // fake async
