@@ -7,7 +7,7 @@ var ChatService = require( 'chatservice/ChatService' );
 
 var Log = require( 'fell' ).Log;
 
-var FirebaseService = require( './FirebaseService' );
+var FirebaseService = require( 'firebaseservice/FirebaseService' );
 
 function FireChatService() {
   this._firebase = FirebaseService.getFirebase();
