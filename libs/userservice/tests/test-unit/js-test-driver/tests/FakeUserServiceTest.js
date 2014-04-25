@@ -2,6 +2,7 @@ var FakeUserServiceTest = TestCase( 'FakeUserServiceTest' );
 
 var FakeUserService = require( 'userservice/FakeUserService' );
 var User = require( 'userservice/User' );
+var GetUserErrorCodes = require( 'userservice/GetUserErrorCodes' );
 
 FakeUserServiceTest.prototype.testInstanceCanBeCreated = function() {
 	var service = new FakeUserService();
@@ -44,7 +45,7 @@ FakeUserServiceTest.prototype.testUserCannotBeAddedTwice = function() {
 	assertException( test, 'Error' );
 };
 
-FakeUserServiceTest.prototype.testCanSetAndGetCurrentUser = function( queue ) {
+FakeUserServiceTest.prototype.testCanSetAndGetCurrentUser = function() {
 	var service = new FakeUserService();
 	var expectedUser = new User( "testUser" );
 
@@ -52,6 +53,15 @@ FakeUserServiceTest.prototype.testCanSetAndGetCurrentUser = function( queue ) {
 
 	var currentUser = service.getCurrentUser();
 	assertEquals( expectedUser, currentUser );
+};
+
+FakeUserServiceTest.prototype.testGetUserThrowsErrorIfListenerDoesNotFulfilGetUserListener = function() {
+	var test = function() {
+		var service = new FakeUserService();
+		service.getUser( 'testUserId', {} );
+	};
+
+	assertException( test, 'Error' );
 };
 
 var FakeUserServiceAsyncTest = AsyncTestCase('FakeUserServiceAsyncTest');
@@ -75,6 +85,46 @@ FakeUserServiceAsyncTest.prototype.testCanAddAndGetUsers = function( queue ) {
 
 		service.getUsers( {
 			usersRetrieved: usersRetrievedCallback
+		} );
+
+	} );
+
+};
+
+FakeUserServiceAsyncTest.prototype.testValidUserCanBeRetrieved = function( queue ) {
+	var service = new FakeUserService();
+	var user1Id = 'testUser1';
+	var expectedUser1 = new User( user1Id );
+
+	service.addUser( expectedUser1 );
+
+	queue.call( 'Step 1: make request for user with userId', function( callbacks ) {
+
+		var userRetrievedCallback = callbacks.add( function( user ) {
+			assertEquals( expectedUser1, user );
+		} );
+
+		service.getUser( user1Id, {
+			userRetrieved: userRetrievedCallback,
+			userRetrievalFailed: function(){}
+		} );
+
+	} );
+
+};
+
+FakeUserServiceAsyncTest.prototype.testInvalidUserResultsInUserRetrievalFailed = function( queue ) {
+	var service = new FakeUserService();
+
+	queue.call( 'Step 1: make request for user with userId that does not exist', function( callbacks ) {
+
+		var userRetrievedCallback = callbacks.add( function( code, message ) {
+			assertEquals( GetUserErrorCodes.NOT_FOUND, code );
+		} );
+
+		service.getUser( 'blah-blah-blah', {
+			userRetrieved: function(){},
+			userRetrievalFailed: userRetrievedCallback
 		} );
 
 	} );

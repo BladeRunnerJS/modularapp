@@ -7,6 +7,14 @@ function UserService() {
 }
 
 /**
+ * Sets the active user for the current application session.
+ *
+ * @param {userservice.User} user
+ */
+UserService.prototype.setCurrentUser = function( user ) {
+};
+
+/**
  * Get the current user of the application.
  *
  * @returns {userservice.User} The current user
@@ -31,22 +39,11 @@ UserService.prototype.getUsers = function( listener ) {
 };
 
 /**
- * Sets the active user for the current application session.
+ * Get the current user of the application.
  *
- * @param {userservice.User} user
+ * @param {userservice.GetUserListener} listener
  */
-UserService.prototype.setCurrentUser = function( user ) {
-};
-
-/**
- * Add a user to the current session. This indicates another user
- * that is using the application in another location.
- *
- * @todo: This shouldn't be part of the public API.
- *
- * @param {userservice.User} user
- */
-UserService.prototype.addUser = function( user ) {
+UserService.prototype.getUser = function( userId, listener ) {
 };
 
 module.exports = UserService;
