@@ -6,7 +6,7 @@ var User = require( './User' );
 
 function FakeUserService() {
   this._users = {};
-  this._listener;
+  this._listener = null;
 }
 br.implement( FakeUserService, UserService );
 
@@ -25,10 +25,8 @@ FakeUserService.prototype.getCurrentUser = function( listener ) {
 FakeUserService.prototype.setCurrentUserFromServer = function( user ) {
 	if(this._listener){
 		this._listener.userRetrieved( user );
-	};
-}
-
-
+	}
+};
 
 FakeUserService.prototype.getUsers = function( listener ) {
   // fake async
