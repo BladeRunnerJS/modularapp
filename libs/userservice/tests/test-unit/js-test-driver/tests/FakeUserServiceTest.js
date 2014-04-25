@@ -1,31 +1,31 @@
-var DummyUserServiceTest = TestCase( 'DummyUserServiceTest' );
+var FakeUserServiceTest = TestCase( 'FakeUserServiceTest' );
 
-var DummyUserService = require( 'userservice/DummyUserService' );
+var FakeUserService = require( 'userservice/FakeUserService' );
 var User = require( 'userservice/User' );
 
-DummyUserServiceTest.prototype.testInstanceCanBeCreated = function() {
-	var service = new DummyUserService();
+FakeUserServiceTest.prototype.testInstanceCanBeCreated = function() {
+	var service = new FakeUserService();
 	assertTrue( service !== undefined );
 };
 
-DummyUserServiceTest.prototype.testUserCanBeAdded = function() {
-	var service = new DummyUserService();
+FakeUserServiceTest.prototype.testUserCanBeAdded = function() {
+	var service = new FakeUserService();
 	var user = new User( "testUser" );
 
 	service.addUser( user );
 };
 
-DummyUserServiceTest.prototype.testObjectLiteralUserCanBeAdded = function() {
-	var service = new DummyUserService();
+FakeUserServiceTest.prototype.testObjectLiteralUserCanBeAdded = function() {
+	var service = new FakeUserService();
 	var user = {
 		userId: "testUser"
 	};
 	service.addUser( user );
 };
 
-DummyUserServiceTest.prototype.testObjectLiteralUnFulfilledUserCannotBeAdded = function() {
+FakeUserServiceTest.prototype.testObjectLiteralUnFulfilledUserCannotBeAdded = function() {
 	var test = function() {
-		var service = new DummyUserService();
+		var service = new FakeUserService();
 		var user = {};
 		service.addUser( user );
 	};
@@ -33,9 +33,9 @@ DummyUserServiceTest.prototype.testObjectLiteralUnFulfilledUserCannotBeAdded = f
 	assertException( test, 'Error' );
 };
 
-DummyUserServiceTest.prototype.testUserCannotBeAddedTwice = function() {
+FakeUserServiceTest.prototype.testUserCannotBeAddedTwice = function() {
 	var test = function() {
-		var service = new DummyUserService();
+		var service = new FakeUserService();
 		var user = new User( "testUser" );
 		service.addUser( user );
 		service.addUser( user );
@@ -44,10 +44,10 @@ DummyUserServiceTest.prototype.testUserCannotBeAddedTwice = function() {
 	assertException( test, 'Error' );
 };
 
-var DummyUserServiceAsyncTest = AsyncTestCase('DummyUserServiceAsyncTest');
+var FakeUserServiceAsyncTest = AsyncTestCase('FakeUserServiceAsyncTest');
 
-DummyUserServiceAsyncTest.prototype.testCanSetAndGetCurrentUser = function( queue ) {
-	var service = new DummyUserService();
+FakeUserServiceAsyncTest.prototype.testCanSetAndGetCurrentUser = function( queue ) {
+	var service = new FakeUserService();
 	var expectedUser = new User( "testUser" );
 
 	service.setCurrentUser( expectedUser );
@@ -67,8 +67,8 @@ DummyUserServiceAsyncTest.prototype.testCanSetAndGetCurrentUser = function( queu
 };
 
 
-DummyUserServiceAsyncTest.prototype.testCanAddAndGetUsers = function( queue ) {
-	var service = new DummyUserService();
+FakeUserServiceAsyncTest.prototype.testCanAddAndGetUsers = function( queue ) {
+	var service = new FakeUserService();
 	var user1Id = 'testUser1';
 	var user2Id = 'testUser2';
 	var expectedUser1 = new User( user1Id );
