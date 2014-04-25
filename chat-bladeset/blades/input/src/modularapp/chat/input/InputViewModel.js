@@ -10,7 +10,6 @@ function InputViewModel() {
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
 	this._userService = ServiceRegistry.getService( 'user.service' );
 
-	this.enabled = ko.observable( false );
 	this.message = ko.observable( '' );
 
 	this._currentUser = this._userService.getCurrentUser();
