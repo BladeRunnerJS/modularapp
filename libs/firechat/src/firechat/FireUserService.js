@@ -25,6 +25,9 @@ emitr.mixInto( FireUserService );
 
 // UserService definitions
 
+/**
+ * @see {userservice.UserService.setCurrentUser}
+ */
 FireUserService.prototype.setCurrentUser = function( user ) {
   if( br.fulfills( user, User.prototype ) === false ) {
     throw new Error( 'user must fulfill the User contract: ' + JSON.stringify( User ) );
@@ -36,6 +39,9 @@ FireUserService.prototype.setCurrentUser = function( user ) {
   this._presence = new Presence( this._firebase, user.userId, {}, this );
 };
 
+/**
+ * @see {userservice.UserService.getCurrentUser}
+ */
 FireUserService.prototype.getCurrentUser = function( listener ) {
   if( this._currentUser === null ) {
     throw new Error( 'currentUser has not been set.' );
@@ -44,14 +50,20 @@ FireUserService.prototype.getCurrentUser = function( listener ) {
   return this._currentUser;
 };
 
+/**
+ * @see {userservice.UserService.getUsers}
+ */
 FireUserService.prototype.getUsers = function( listener ) {
   setTimeout( function() {
     listener.usersRetrieved( this._users );
   }, 0 );
 };
 
-FireUserService.prototype.addUser = function( user ) {
-  throw new Error( 'addUser not implemented in FireUserService' );
+/**
+ * @see {userservice.UserService.getUser}
+ */
+FireUserService.prototype.getUser = function( userId, listener ) {
+  throw new Error( 'not implemented' );
 };
 
 // Presence Listener definitions
