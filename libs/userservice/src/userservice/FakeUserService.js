@@ -13,19 +13,12 @@ br.implement( FakeUserService, UserService );
 // UserService definitions
 
 FakeUserService.prototype.getCurrentUser = function( listener ) {
-  // fake async
-  var self = this;
-  this._listener = listener;
-  setTimeout( function() {
-    var user = self._users[ self._currentUserId ];
-    listener.userRetrieved( user );
-  }, 0 );
-};
+  if( !this._currentUserId ) {
+    throw new Error( 'the currentUser has not been set' );
+  }
 
-FakeUserService.prototype.setCurrentUserFromServer = function( user ) {
-	if(this._listener){
-		this._listener.userRetrieved( user );
-	}
+  var user = this._users[ this._currentUserId ];
+  return user;
 };
 
 FakeUserService.prototype.getUsers = function( listener ) {
