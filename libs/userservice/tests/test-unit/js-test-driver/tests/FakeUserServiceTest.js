@@ -44,28 +44,17 @@ FakeUserServiceTest.prototype.testUserCannotBeAddedTwice = function() {
 	assertException( test, 'Error' );
 };
 
-var FakeUserServiceAsyncTest = AsyncTestCase('FakeUserServiceAsyncTest');
-
-FakeUserServiceAsyncTest.prototype.testCanSetAndGetCurrentUser = function( queue ) {
+FakeUserServiceTest.prototype.testCanSetAndGetCurrentUser = function( queue ) {
 	var service = new FakeUserService();
 	var expectedUser = new User( "testUser" );
 
 	service.setCurrentUser( expectedUser );
 
-	queue.call( 'Step 1: make request for current user', function( callbacks ) {
-
-		var userRetrievedCallback = callbacks.add( function( user ) {
-			assertEquals( expectedUser, user );
-		} );
-
-		service.getCurrentUser( {
-			userRetrieved: userRetrievedCallback
-		} );
-
-	} );
-
+	var currentUser = service.getCurrentUser();
+	assertEquals( expectedUser, currentUser );
 };
 
+var FakeUserServiceAsyncTest = AsyncTestCase('FakeUserServiceAsyncTest');
 
 FakeUserServiceAsyncTest.prototype.testCanAddAndGetUsers = function( queue ) {
 	var service = new FakeUserService();

@@ -13,8 +13,7 @@ function InputViewModel() {
 	this.enabled = ko.observable( false );
 	this.message = ko.observable( '' );
 
-	this._currentUser = null;
-	this._userService.getCurrentUser( this );
+	this._currentUser = this._userService.getCurrentUser();
 }
 
 InputViewModel.prototype.buttonClicked = function() {
@@ -39,18 +38,6 @@ InputViewModel.prototype.buttonClicked = function() {
 
 	return valid;
 };
-
-/**
- * ChatService.getCurrentUser callback contract
- */
-InputViewModel.prototype.userRetrieved = function( user ) {
-	if( br.fulfills( user, User.prototype ) === false ) {
-		throw new Error( 'user must fulfill the User contract: ' + JSON.stringify( User ) );
-	}
-
-	this._currentUser = user;
-	this.enabled( true );
-}
 
 function messageValid( message ) {
 	var valid = true;

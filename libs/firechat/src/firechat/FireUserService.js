@@ -41,10 +41,7 @@ FireUserService.prototype.getCurrentUser = function( listener ) {
     throw new Error( 'currentUser has not been set.' );
   }
 
-  var self = this;
-  setTimeout( function() {
-    listener.userRetrieved( self._currentUser );
-  }, 0 )
+  return this._currentUser;
 };
 
 FireUserService.prototype.getUsers = function( listener ) {

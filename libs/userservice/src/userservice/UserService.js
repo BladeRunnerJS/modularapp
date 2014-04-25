@@ -7,18 +7,12 @@ function UserService() {
 }
 
 /**
- * Used to listen to user retrieval.
- * @typedef {Object} UserService~GetUserListener
- * @property {Function} userRetrieved - User retrieved successfully.
- * @property {Function} userRetrievalFailed - User retrieval failed.
- */
-
-/**
  * Get the current user of the application.
  *
- * @param {...GetUserListener} listener
+ * @returns {userservice.User} The current user
+ * @throws {Error} if the user has not been set
  */
-UserService.prototype.getCurrentUser = function( listener ) {
+UserService.prototype.getCurrentUser = function() {
 };
 
 /**

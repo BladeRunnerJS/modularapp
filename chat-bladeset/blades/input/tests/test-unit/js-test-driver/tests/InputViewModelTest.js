@@ -6,16 +6,12 @@ var ServiceRegistry = require( 'br/ServiceRegistry' );
 var model = null;
 
 InputViewModelTest.prototype.setUp = function() {
-  var user = { userId: 'testUser' };
-
-  // If any tests become Asynchronous this will be required.
   var userService = ServiceRegistry.getService( 'user.service' );
+
+  var user = { userId: 'testUser' };
   userService.setCurrentUser( user );
 
   model = new InputViewModel();
-
-  // For any synchronous tests we can set the user directly
-  model.userRetrieved( user );
 };
 
 // Note: ServiceRegistry is cleared down for each test by the test runtime.
@@ -42,7 +38,10 @@ InputViewModelTest.prototype.testMessageWithValidValueIsClearedAfterButtonClicke
   assertEquals( '', model.message() );
 };
 
-InputViewModelTest.prototype.testCurrentUserMustBeSetBeforeMessagesCanBeSent = function() {
+// Tests where the UserService hasn't been set up with a User
+var InputViewModelNoUserTest = TestCase( 'InputViewModelNoUserTest' );
+
+InputViewModelNoUserTest.prototype.testCurrentUserMustBeSetBeforeMessagesCanBeSent = function() {
   var test = function() {
     var noUserModel = new InputViewModel();
 
