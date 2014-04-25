@@ -1,15 +1,15 @@
-var LocalChatServiceTest = TestCase( 'LocalChatServiceTest' );
+var FakeChatServiceTest = TestCase( 'FakeChatServiceTest' );
 
-var LocalChatService = require( 'chatservice/LocalChatService' );
+var FakeChatService = require( 'chatservice/FakeChatService' );
 var ChatMessage = require( 'chatservice/ChatMessage' );
 
-LocalChatServiceTest.prototype.testCreatingDummyChatServiceInstance = function() {
-	var service = new LocalChatService();
+FakeChatServiceTest.prototype.testCreatingDummyChatServiceInstance = function() {
+	var service = new FakeChatService();
 	assertTrue( service !== undefined );
 };
 
-LocalChatServiceTest.prototype.testNewMessageEventIsTriggeredOnSendMessage = function() {
-	var service = new LocalChatService();
+FakeChatServiceTest.prototype.testNewMessageEventIsTriggeredOnSendMessage = function() {
+	var service = new FakeChatService();
 	var triggered = false;
 	service.on( 'new-message', function() {
 		triggered = true;
@@ -19,8 +19,8 @@ LocalChatServiceTest.prototype.testNewMessageEventIsTriggeredOnSendMessage = fun
 	assertTrue( triggered );
 };
 
-LocalChatServiceTest.prototype.testMessageObjectIsPassedWhenNewMessageIsTriggered = function() {
-	var service = new LocalChatService();
+FakeChatServiceTest.prototype.testMessageObjectIsPassedWhenNewMessageIsTriggered = function() {
+	var service = new FakeChatService();
 	var triggeredMessage = null;
 	service.on( 'new-message', function( data ) {
 		triggeredMessage = data;
@@ -32,10 +32,10 @@ LocalChatServiceTest.prototype.testMessageObjectIsPassedWhenNewMessageIsTriggere
 };
 
 
-var LocalChatServiceAsyncTest = AsyncTestCase('LocalChatServiceAsyncTest');
+var FakeChatServiceAsyncTest = AsyncTestCase('FakeChatServiceAsyncTest');
 
-LocalChatServiceAsyncTest.prototype.testCanGetMessages = function( queue ) {
-	var service = new LocalChatService();
+FakeChatServiceAsyncTest.prototype.testCanGetMessages = function( queue ) {
+	var service = new FakeChatService();
 	var message1 = { userId: 'leggetter', text: 'hello', timestamp: new Date() };
 	var message2 = { userId: 'andyberry88', text: 'Yo!', timestamp: new Date() };
 	service.sendMessage( message1 );
