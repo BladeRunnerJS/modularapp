@@ -1,0 +1,4 @@
+<aliases xmlns="http://schema.caplin.com/CaplinTrader/aliases" useScenario="dev">
+	<alias name="user.service" class="userservice.FakeUserService"/>
+	<alias name="http.service" class="httpservice.Service"/>
+</aliases>

@@ -1,0 +1,23 @@
+<div id="modularapp.chat.usercard.view-template">
+
+	<section class="chat-usercard" data-bind="visible: cardShown">
+
+		<!-- ko if: hasUserInfo -->
+		<img class="usercard-avatar" data-bind="attr: { src: userInfo().data.avatar_url }" />
+		<div class="usercard-name" data-bind="text: userInfo().data.name"></div>
+		<div class="usercard-company" data-bind="text: userInfo().data.company"></div>
+		<div class="usercard-email" data-bind="text: userInfo().data.email"></div>
+		<div class="usercard-location" data-bind="text: userInfo().data.location"></div>
+		<!-- /ko -->
+
+		<!-- ko ifnot: hasUserInfo -->
+		<!-- TODO: loading spinner -->
+		<!-- /ko -->
+
+		<button data-bind="click: closeClicked" class="btn btn-default btn-xs usercard-close-btn">
+				<span class="glyphicon glyphicon-remove"></span>
+		</button>
+
+	</section>
+
+</div>

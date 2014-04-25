@@ -1,0 +1,30 @@
+.chat-usercard {
+  position: relative;
+
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+
+  width: 300px;
+  min-height: 75px;
+  padding: 10px;
+  padding-left: 70px;
+
+  border-radius: 5px;
+  -webkit-box-shadow: 0 2px 3px rgba(0,0,0,.3);
+  box-shadow: 0 2px 3px rgba(0,0,0,.3);
+  background: #f7f7f9;
+}
+
+.usercard-avatar {
+  position: absolute;
+  left: 10px;
+  width: 50px;
+}
+
+.usercard-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
