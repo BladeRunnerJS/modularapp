@@ -9,18 +9,18 @@ var Log = require( 'fell' ).Log;
  * Events (via emitr):
  *   new-message - when a new message has been received by the service
  */
-function LocalChatService() {
+function FakeChatService() {
   this._messages = [];
 }
-br.implement( LocalChatService, ChatService );
-emitr.mixInto( LocalChatService );
+br.implement( FakeChatService, ChatService );
+emitr.mixInto( FakeChatService );
 
 /**
  * Send a message.
  *
  * @param {ChatMessage} message - The message to send.
  */
-LocalChatService.prototype.sendMessage = function( message ) {
+FakeChatService.prototype.sendMessage = function( message ) {
   this._messages.push( message );
 
   Log.info( 'Trigger new-message: {0}', JSON.stringify( message ) );
@@ -34,7 +34,7 @@ LocalChatService.prototype.sendMessage = function( message ) {
  * @param {Object} listener - The object to be informed of chat message retrieval
  *                            success or failure.
  */
-LocalChatService.prototype.getMessages = function( listener ) {
+FakeChatService.prototype.getMessages = function( listener ) {
   // fake async
   var self = this;
   setTimeout( function() {
@@ -43,4 +43,4 @@ LocalChatService.prototype.getMessages = function( listener ) {
   }, 0 );
 };
 
-module.exports = LocalChatService;
+module.exports = FakeChatService;
