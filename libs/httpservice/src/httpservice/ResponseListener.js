@@ -2,7 +2,7 @@
 
 /**
  * Interface/contract for listening to the result of calls to
- * {restul.Service.request}s.
+ * {httpservice.Service.request} results.
  */
 function ResponseListener() {
 }

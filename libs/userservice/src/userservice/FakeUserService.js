@@ -1,14 +1,20 @@
 'use strict';
 
 var br = require( 'br/Core' );
+var ServiceRegistry = require( 'br/ServiceRegistry' );
 var UserService = require( './UserService' );
 var GetUserListener = require( './GetUserListener' );
 var GetUserErrorCodes = require( './GetUserErrorCodes' );
 var User = require( './User' );
 
+// TODO: Move this to a service that can also be used in the FireChatUserService
+var GITHUB_USER_API_URL = 'https://api.github.com/users/';
+
 function FakeUserService() {
   this._users = {};
   this._listener = null;
+
+  this._httpService = ServiceRegistry.getService( 'http.service' );
 }
 br.implement( FakeUserService, UserService );
 
@@ -95,6 +101,28 @@ FakeUserService.prototype.addUser = function( user ) {
   }
 
   this._users[ user.userId ] = user;
+
+  var githubUserUrl = GITHUB_USER_API_URL + user.userId;
+  this._httpService.request( {
+    url: githubUserUrl,
+    type: 'json'
+  }, this );
+};
+
+/**
+ * @see {httpservice.ResponseListener.requestSucceeded}
+ */
+FakeUserService.prototype.requestSucceeded = function( response ) {
+  // Example response: https://api.github.com/users/leggetter
+  this._users[ response.login ].data = response;
+};
+
+/**
+* @see {httpservice.ResponseListener.requestFailed}
+*/
+FakeUserService.prototype.requestFailed = function( error ) {
+  // Unexpected, so error.
+  throw new Error( error.toString() );
 };
 
 // Private non-instance functions
