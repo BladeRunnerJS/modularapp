@@ -4,15 +4,15 @@ var br = require( 'br/Core' );
 var UserService = require( './UserService' );
 var User = require( './User' );
 
-function DummyUserService() {
+function FakeUserService() {
   this._users = {};
   this._listener;
 }
-br.implement( DummyUserService, UserService );
+br.implement( FakeUserService, UserService );
 
 // UserService definitions
 
-DummyUserService.prototype.getCurrentUser = function( listener ) {
+FakeUserService.prototype.getCurrentUser = function( listener ) {
   // fake async
   var self = this;
   this._listener = listener;
@@ -22,7 +22,7 @@ DummyUserService.prototype.getCurrentUser = function( listener ) {
   }, 0 );
 };
 
-DummyUserService.prototype.setCurrentUserFromServer = function( user ) {
+FakeUserService.prototype.setCurrentUserFromServer = function( user ) {
 	if(this._listener){
 		this._listener.userRetrieved( user );
 	};
@@ -30,7 +30,7 @@ DummyUserService.prototype.setCurrentUserFromServer = function( user ) {
 
 
 
-DummyUserService.prototype.getUsers = function( listener ) {
+FakeUserService.prototype.getUsers = function( listener ) {
   // fake async
   var self = this;
   setTimeout( function() {
@@ -39,7 +39,7 @@ DummyUserService.prototype.getUsers = function( listener ) {
   }, 0 );
 };
 
-DummyUserService.prototype.setCurrentUser = function( user ) {
+FakeUserService.prototype.setCurrentUser = function( user ) {
   checkUser( user );
 
   this.addUser( user );
@@ -47,7 +47,7 @@ DummyUserService.prototype.setCurrentUser = function( user ) {
   this._currentUserId = user.userId;
 };
 
-DummyUserService.prototype.addUser = function( user ) {
+FakeUserService.prototype.addUser = function( user ) {
   checkUser( user );
 
   if( this._users[ user.userId ] !== undefined ) {
@@ -64,4 +64,4 @@ function checkUser( user ) {
   }
 }
 
-module.exports = DummyUserService;
+module.exports = FakeUserService;
