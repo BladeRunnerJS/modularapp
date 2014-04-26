@@ -1,6 +1,8 @@
 'use strict';
 
 var br = require( 'br/Core' );
+var ServiceRegistry = require( 'br/ServiceRegistry' );
+
 var UserService = require( './UserService' );
 var GetUserListener = require( './GetUserListener' );
 var GetUserErrorCodes = require( './GetUserErrorCodes' );
@@ -10,7 +12,13 @@ var User = require( './User' );
 function FakeUserService() {
   this._users = {};
 
-  this._gitHubUserFetcher = new GitHubUserFetcher();
+  this._gitHubUserFetcher = null;
+  if( ServiceRegistry.isServiceRegistered( 'github.userfetcher' ) ) {
+    this._gitHubUserFetcher = ServiceRegistry.getService( 'github.userfetcher' )
+  }
+  else {
+    this._gitHubUserFetcher = new GitHubUserFetcher();
+  }
 }
 br.implement( FakeUserService, UserService );
 
@@ -64,34 +72,40 @@ FakeUserService.prototype.getUser = function( userId, listener ) {
 
   var user = this._users[ userId ];
 
-  var self = this;
-  // fake async
-  setTimeout( function() {
-    if( user && !user.data ) {
-      // If the GitHub data hasn't yet been retrieved
-      // try again and then make the callback.
-      self._gitHubUserFetcher.getUser( user.userId, {
-        requestSucceeded: function() {
-          self.requestSucceeded.apply( self, arguments );
-          listener.userRetrieved( user );
-        },
-        requestFailed: function() {
-          self.requestFailed.apply( self, arguments );
-        }
-      } );
-
-    }
-    else if( user ) {
-      listener.userRetrieved( user );
-    }
-    else {
+  if( user ) {
+    this._getUserData( user, listener );
+  }
+  else {
+    // fake async
+    setTimeout( function() {
       listener.userRetrievalFailed(
         GetUserErrorCodes.NOT_FOUND,
         'User with userId ' + userId + ' not found'
       );
-    }
-  }, 0 );
+    }, 0 );
+  }
+
 };
+
+/**
+ * @private
+ */
+FakeUserService.prototype._getUserData = function( user, listener ) {
+
+  this._gitHubUserFetcher.getUser( user.userId, {
+    requestSucceeded: function( response ) {
+      user.data = response;
+      listener.userRetrieved( user );
+    },
+    requestFailed: function() {
+      listener.userRetrievalFailed(
+        GetUserErrorCodes.NOT_FOUND,
+        'User data for user with userId ' + userId + ' not found'
+      );
+    }
+  } );
+
+}
 
 // Helper functions: used for development and testing.
 
