@@ -4,7 +4,8 @@
 
 		<div data-bind="foreach: messages">
 			<div class="message">
-				<span class="message-user-id" data-bind="text: userId"></span>
+				<span class="message-user-id"
+							data-bind="text: userId, click: $parent.userSelected.bind( $parent )"></span>
 				<span class="message-text" data-bind="text: text"></span>
 				<span class="message-timestamp" data-bind="text: timestamp"></span>
 			</div>
