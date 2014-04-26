@@ -18,11 +18,22 @@ describe('When a user is selected in the MessagesViewModel', function() {
     var messagesViewModel = new MessagesViewModel();
     var message = { userId: 'testUserId', text: 'testUserText', timestamp: new Date() };
     var messageItemViewModel = new MessageItemViewModel( message );
+    var fakeEvent = {
+      clientX: 0,
+      clientY: 0
+    };
 
-    messagesViewModel.userSelected( messageItemViewModel );
+    messagesViewModel.userSelected( messageItemViewModel, fakeEvent );
 
+    var expectedEventData = {
+      userId: message.userId,
+      position: {
+        x: fakeEvent.clientX,
+        y: fakeEvent.clientY
+      }
+    };
     expect( eventHub.channel ).toHaveBeenCalledWith( 'user' );
-    expect( userChannel.trigger ).toHaveBeenCalledWith( 'user-selected', { userId: message.userId } );
+    expect( userChannel.trigger ).toHaveBeenCalledWith( 'user-selected', expectedEventData );
   } );
 
 });
