@@ -1,5 +1,7 @@
 var FakeUserServiceTest = TestCase( 'FakeUserServiceTest' );
 
+var ServiceRegistry = require( 'br/ServiceRegistry' );
+
 var FakeUserService = require( 'userservice/FakeUserService' );
 var User = require( 'userservice/User' );
 var GetUserErrorCodes = require( 'userservice/GetUserErrorCodes' );
@@ -92,10 +94,20 @@ FakeUserServiceAsyncTest.prototype.testCanAddAndGetUsers = function( queue ) {
 };
 
 FakeUserServiceAsyncTest.prototype.testValidUserCanBeRetrieved = function( queue ) {
-	var service = new FakeUserService();
 	var user1Id = 'testUser1';
 	var expectedUser1 = new User( user1Id );
 
+	var stubFetcher = {}
+	stubFetcher.getUser = function( userId, listener ) {
+		listener.requestSucceeded( {
+			login: userId,
+			name: 'Test User'
+		} );
+	};
+
+	ServiceRegistry.registerService( 'github.userfetcher', stubFetcher );
+
+	var service = new FakeUserService();
 	service.addUser( expectedUser1 );
 
 	queue.call( 'Step 1: make request for user with userId', function( callbacks ) {
