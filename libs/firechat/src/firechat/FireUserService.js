@@ -6,6 +6,9 @@ var emitr = require( 'emitr' );
 
 var UserService = require( 'userservice/UserService' );
 var User = require( 'userservice/User' );
+var GetUserListener = require( 'userservice/GetUserListener' );
+var GitHubUserFetcher = require( 'userservice/GitHubUserFetcher' );
+
 var ChatService = require( 'chatservice/ChatService' );
 
 var Presence = require( './Presence' );
@@ -16,6 +19,8 @@ var FirebaseService = require( 'firebaseservice/FirebaseService' );
 function FireUserService() {
   this._firebase = null;
   this._presence = null;
+
+  this._gitHubUserFetcher = new GitHubUserFetcher();
 
   this._currentUser = null;
   this._users = {};
@@ -63,8 +68,47 @@ FireUserService.prototype.getUsers = function( listener ) {
  * @see {userservice.UserService.getUser}
  */
 FireUserService.prototype.getUser = function( userId, listener ) {
-  throw new Error( 'not implemented' );
+  if( !br.fulfills( listener, GetUserListener.prototype ) ) {
+    throw new Error( 'listener must fulfil the GetUserListener contract: ' +
+                       JSON.stringify( GetUserListener )
+                    );
+  }
+
+  var user = this._users[ userId ];
+
+  if( user ) {
+    this._getUserData( user, listener );
+  }
+  else {
+    // fake async
+    setTimeout( function() {
+      listener.userRetrievalFailed(
+        GetUserErrorCodes.NOT_FOUND,
+        'User with userId ' + userId + ' not found'
+      );
+    }, 0 );
+  }
 };
+
+/**
+ * @private
+ */
+FireUserService.prototype._getUserData = function( user, listener ) {
+
+  this._gitHubUserFetcher.getUser( user.userId, {
+    requestSucceeded: function( response ) {
+      user.data = response;
+      listener.userRetrieved( user );
+    },
+    requestFailed: function() {
+      listener.userRetrievalFailed(
+        GetUserErrorCodes.NOT_FOUND,
+        'User data for user with userId ' + userId + ' not found'
+      );
+    }
+  } );
+
+}
 
 // Presence Listener definitions
 

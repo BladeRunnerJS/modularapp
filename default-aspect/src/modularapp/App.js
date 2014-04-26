@@ -12,6 +12,7 @@ var LoginViewModel = require( 'modularapp/chat/login/LoginViewModel' );
 var HeaderViewModel = require( 'modularapp/chat/header/HeaderViewModel' );
 var InputViewModel = require( 'modularapp/chat/input/InputViewModel' );
 var MessagesViewModel = require( 'modularapp/chat/messages/MessagesViewModel' );
+var UserCardViewModel = require( 'modularapp/chat/usercard/UsercardViewModel' );
 
 var App = function() {
 
@@ -63,6 +64,13 @@ App.prototype.handleUserLogin = function( user ) {
     new KnockoutComponent( 'modularapp.chat.input.view-template', inputViewModel );
   var inputEl = inputComponent.getElement();
   document.body.appendChild( inputEl );
+
+  // Create and add UserCard Blade
+  var userCardViewModel = new UserCardViewModel();
+  var userCardComponent =
+    new KnockoutComponent( 'modularapp.chat.usercard.view-template', userCardViewModel );
+  var userCardEl = userCardComponent.getElement();
+  document.body.appendChild( userCardEl );
 
 };
 

@@ -1,4 +1,5 @@
 <aliases xmlns="http://schema.caplin.com/CaplinTrader/aliases" useScenario="dev">
+	<alias name="http.service" class="httpservice.Service"/>
 	<alias name="chat.service" class="firechat.FireChatService"/>
 	<alias name="user.service" class="firechat.FireUserService"/>
 </aliases>
