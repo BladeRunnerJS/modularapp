@@ -1,6 +1,7 @@
 <div id="modularapp.chat.usercard.view-template">
 
-	<section class="chat-usercard" data-bind="visible: cardShown">
+	<section class="chat-usercard"
+					 data-bind="visible: cardShown, style: { top: position().y, left: position().x }">
 
 		<!-- ko if: hasUserInfo -->
 		<img class="usercard-avatar" data-bind="attr: { src: userInfo().data.avatar_url }" />
