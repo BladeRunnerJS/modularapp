@@ -1,20 +1,16 @@
 'use strict';
 
 var br = require( 'br/Core' );
-var ServiceRegistry = require( 'br/ServiceRegistry' );
 var UserService = require( './UserService' );
 var GetUserListener = require( './GetUserListener' );
 var GetUserErrorCodes = require( './GetUserErrorCodes' );
+var GitHubUserFetcher = require( './GitHubUserFetcher' );
 var User = require( './User' );
-
-// TODO: Move this to a service that can also be used in the FireChatUserService
-var GITHUB_USER_API_URL = 'https://api.github.com/users/';
 
 function FakeUserService() {
   this._users = {};
-  this._listener = null;
 
-  this._httpService = ServiceRegistry.getService( 'http.service' );
+  this._gitHubUserFetcher = new GitHubUserFetcher();
 }
 br.implement( FakeUserService, UserService );
 
@@ -34,7 +30,7 @@ FakeUserService.prototype.setCurrentUser = function( user ) {
 /**
  * @see {UserService.getCurrentUser}
  */
-FakeUserService.prototype.getCurrentUser = function( listener ) {
+FakeUserService.prototype.getCurrentUser = function() {
   if( !this._currentUserId ) {
     throw new Error( 'the currentUser has not been set' );
   }
@@ -68,10 +64,24 @@ FakeUserService.prototype.getUser = function( userId, listener ) {
 
   var user = this._users[ userId ];
 
-  // fake async
   var self = this;
+  // fake async
   setTimeout( function() {
-    if( user ) {
+    if( user && !user.data ) {
+      // If the GitHub data hasn't yet been retrieved
+      // try again and then make the callback.
+      self._gitHubUserFetcher.getUser( user.userId, {
+        requestSucceeded: function() {
+          self.requestSucceeded.apply( self, arguments );
+          listener.userRetrieved( user );
+        },
+        requestFailed: function() {
+          self.requestFailed.apply( self, arguments );
+        }
+      } );
+
+    }
+    else if( user ) {
       listener.userRetrieved( user );
     }
     else {
@@ -102,11 +112,18 @@ FakeUserService.prototype.addUser = function( user ) {
 
   this._users[ user.userId ] = user;
 
-  var githubUserUrl = GITHUB_USER_API_URL + user.userId;
-  this._httpService.request( {
-    url: githubUserUrl,
-    type: 'json'
-  }, this );
+  this._gitHubUserFetcher.getUser( user.userId, this );
+};
+
+/**
+ * Has the user been added to the user service.
+ *
+ * @param {string} userId the ID of the user to check.
+ *
+ * @returns {boolean} true or false
+ */
+FakeUserService.prototype.userExists = function( userId ) {
+  return ( this._users[ userId ] !== undefined );
 };
 
 /**
