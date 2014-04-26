@@ -10,6 +10,8 @@ function MessagesViewModel() {
 
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
 	this._chatService.getMessages( this );
+
+	this._eventHub = ServiceRegistry.getService( 'br.event-hub' );
 }
 
 MessagesViewModel.prototype.messagesRetrieved = function( messages ) {
@@ -18,6 +20,11 @@ MessagesViewModel.prototype.messagesRetrieved = function( messages ) {
 	}, this );
 
 	this._chatService.on( 'new-message', this._addMessage, this );
+};
+
+MessagesViewModel.prototype.userSelected = function( data, event ) {
+	var userInfo = { userId: data.userId() };
+	this._eventHub.channel( 'user' ).trigger( 'user-selected', userInfo );
 };
 
 MessagesViewModel.prototype._addMessage = function( message ) {
