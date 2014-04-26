@@ -2,11 +2,37 @@
 
 var ko = require( 'ko' );
 
+// TODO: where should UI behaviours like this be stored?
+ko.bindingHandlers.maintainScrollBottom = {
+	init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+		var scrolledToBottom = true;
+
+		// Set initial scroll to bottom
+		element.scrollTop = element.scrollHeight;
+
+		// Listen for scroll events and keep track if we're at the bottom
+		element.addEventListener( 'scroll', function() {
+			scrolledToBottom = ( element.scrollTop + element.offsetHeight ) === element.scrollHeight;
+		} );
+
+		// Bind to changes on the value we're to track
+		valueAccessor().subscribe(function( value ) {
+
+			// If we are at the bottom, wait for render and then scroll back to bottom
+			if( scrolledToBottom ) {
+				setTimeout( function(){
+					element.scrollTop = element.scrollHeight;
+				}, 0);
+			}
+		});
+  }
+};
+
 var MessageItemViewModel = require( './MessageItemViewModel' );
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 function MessagesViewModel() {
-	this._isScrolledToBottom = false;
+	this.isScrolledToBottom = ko.observable( true );
 
 	this.messages = ko.observableArray( [] );
 
