@@ -42,6 +42,14 @@
 			var chatService = ServiceRegistry.getService( 'chat.service' );
 			chatService.sendMessage( { userId: 'leggetter', text: 'hello', timestamp: new Date() } );
 			chatService.sendMessage( { userId: 'andyberry88', text: 'Yo!', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'leggetter', text: 'hello', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'andyberry88', text: 'Yo!', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'leggetter', text: 'hello', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'andyberry88', text: 'Yo!', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'leggetter', text: 'hello', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'andyberry88', text: 'Yo!', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'leggetter', text: 'hello', timestamp: new Date() } );
+			chatService.sendMessage( { userId: 'andyberry88', text: 'Yo!', timestamp: new Date() } );
 
 			var model = new MessagesViewModel();
 			var component = new KnockoutComponent( 'modularapp.chat.messages.view-template', model );
