@@ -6,6 +6,8 @@ var MessageItemViewModel = require( './MessageItemViewModel' );
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 function MessagesViewModel() {
+	this._isScrolledToBottom = false;
+
 	this.messages = ko.observableArray( [] );
 
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
@@ -23,8 +25,14 @@ MessagesViewModel.prototype.messagesRetrieved = function( messages ) {
 };
 
 MessagesViewModel.prototype.userSelected = function( data, event ) {
-	var userInfo = { userId: data.userId() };
-	this._eventHub.channel( 'user' ).trigger( 'user-selected', userInfo );
+	var eventData = {
+		userId: data.userId(),
+		position: {
+			x: event.clientX,
+			y: event.clientY
+		}
+	};
+	this._eventHub.channel( 'user' ).trigger( 'user-selected', eventData );
 };
 
 MessagesViewModel.prototype._addMessage = function( message ) {
