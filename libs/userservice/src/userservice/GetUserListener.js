@@ -16,7 +16,6 @@
  /**
   * User retrieval failed e.g. the user with the provided userId was not found.
   *
-  * @param {userservice.User} user - The retrieved user
   */
  GetUserListener.prototype.userRetrievalFailed = function( code, message ) {};
 
