@@ -51,6 +51,36 @@
 
 			addComponent( component, workbench )
 			addModelViewer( model, workbench );
+
+			function fakeTrigger() {
+				var userId = document.getElementById( 'user_id' ).value;
+
+				if( !userService.userExists( userId ) ) {
+					// only add if not already added
+					var testUser = { userId: userId };
+					userService.addUser( testUser );
+				}
+
+				ServiceRegistry.getService('br.event-hub')
+					.channel( 'user' )
+						.trigger( 'user-selected', { userId: userId } );
+			}
+
+			window.addEventListener( 'load', function() {
+				var buttonEl = document.createElement( 'button' );
+				buttonEl.addEventListener( 'click', fakeTrigger );
+				buttonEl.innerHTML = 'Fake Trigger';
+
+				var inputEl = document.createElement( 'input' );
+				inputEl.value = 'leggetter';
+				inputEl.id = 'user_id';
+
+				var leftWorkbenchPanel = document.getElementById( 'workbench-panel-0' );
+				leftWorkbenchPanel.appendChild( inputEl );
+				leftWorkbenchPanel.appendChild( buttonEl );
+			} )
 		</script>
+
+
 	</body>
 </html>
