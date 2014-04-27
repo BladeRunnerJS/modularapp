@@ -29,12 +29,8 @@ var App = function() {
   this.loginEl = loginComponent.getElement();
   document.body.appendChild( this.loginEl );
 
-  var self = this;
-  // setTimeout( function() {
-    self.loginEl.classList.add( 'animated' );
-    self.loginEl.classList.add( 'fadeInDownBig' );
-  // }, 2000 );
-
+  this.loginEl.classList.add( 'animated' );
+  this.loginEl.classList.add( 'fadeInDownBig' );
 
   loginViewModel.on( 'user-logged-in', this.handleUserLogin, this );
 };
@@ -50,6 +46,8 @@ App.prototype.handleUserLogin = function( user ) {
   setTimeout( function() {
     self.loginEl.style.display = "none";
   }, 300 );
+
+  // Add other Blades here:
 
   // Create and add Messages Blade
   var messagesViewModel = new MessagesViewModel();
