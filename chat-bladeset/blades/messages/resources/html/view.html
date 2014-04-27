@@ -2,7 +2,7 @@
 
 	<section class="messages" data-bind="maintainScrollBottom: messages">
 
-		<div data-bind="foreach: messages">
+		<div class="messages-container" data-bind="foreach: messages">
 			<div class="message">
 				<span class="message-user-id"
 							data-bind="text: userId, click: $parent.userSelected.bind( $parent )"></span>
