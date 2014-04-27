@@ -38,6 +38,7 @@
 			var userService = ServiceRegistry.getService( 'user.service' );
 			var testUser = { userId: 'Guest_' + new Date().getTime() };
 			userService.setCurrentUser( testUser );
+			// userService.setUserDataFetcher( 'failing', { count: 1 } );
 
 			// ViewModel that is being created in the workbench
 			var InputViewModel = require( 'modularapp/chat/input/InputViewModel' );

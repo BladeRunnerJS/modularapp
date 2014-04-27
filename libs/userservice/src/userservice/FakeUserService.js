@@ -36,16 +36,28 @@ FakeUserService.prototype.reset = function() {
  * @param {object} options - a list of options that any fetcher may take
  */
 FakeUserService.prototype.setUserDataFetcher = function( provider, options ) {
+  options = options || {};
+
   if( provider === 'github' ) {
     this._userDataFetcher = new GitHubUserFetcher( options );
   }
   else if( provider === 'failing' ) {
 
-    this._gitHubFetcher = {
+    var service = this;
+    this._userDataFetcher = {
+      count: 0,
+      resetAt: options.count,
       getUser: function( userId, listener ) {
-        setTimeout( function() {
-          listener.requestFailed()
-        }, 0 );
+        ++this.count;
+        var shouldReset = ( this.count === this.resetAt );
+
+        // setTimeout( function() {
+          listener.requestFailed();
+          if( shouldReset ) {
+            service._userDataFetcher = null;
+          }
+        // }, 0 );
+
       }
     };
 
