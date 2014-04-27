@@ -10,6 +10,7 @@ function InputViewModel() {
 
 	this.message = ko.observable( '' );
 	this.enabled = ko.observable( false );
+	this.feedbackMessage = ko.observable( '' );
 
 	this._currentUser = null;
 
@@ -28,8 +29,7 @@ InputViewModel.prototype.userRetrieved = function( user ) {
  * @see userservice.GetUserListener.userRetrievalFailed
  */
 InputViewModel.prototype.userRetrievalFailed = function( ) {
-	// unexpected
-	throw new Error( 'Could not get current user' );
+	this.feedbackMessage( 'Could not get current user. Chat input disabled.' );
 };
 
 InputViewModel.prototype.buttonClicked = function() {

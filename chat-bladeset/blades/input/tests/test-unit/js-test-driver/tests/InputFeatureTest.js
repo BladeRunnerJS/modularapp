@@ -15,7 +15,7 @@ describe( 'The Input', function() {
     expect( userService.getCurrentUser ).toHaveBeenCalled();
   } );
 
-  it( 'sends a message when the user has entered text and clicks the send button', function() {
+  it( 'Sends a message when the user has entered text and clicks the send button', function() {
     spyOn( chatService, 'sendMessage' );
 
     var userId = 'testUser';
@@ -32,6 +32,21 @@ describe( 'The Input', function() {
 
     var expectedMessage = { userId: userId, text: text, timestamp: jasmine.any( Date ) };
     expect( chatService.sendMessage ).toHaveBeenCalledWith( expectedMessage );
+  } );
+
+  it( 'Disables the interface when the current user is not available', function() {
+    userService.setUserDataFetcher( 'failing', { count: 1 } );
+
+    var inputViewModel = new InputViewModel();
+    expect( inputViewModel.enabled() ).toBe( false );
+  } );
+
+  it( 'Provides the user with a feedback messages when the current user is not available', function() {
+    userService.setUserDataFetcher( 'failing', { count: 1 } );
+
+    var inputViewModel = new InputViewModel();
+    var defaultValue = '';
+    expect( inputViewModel.feedbackMessage() ).not.toBe( defaultValue );
   } );
 
 } );
