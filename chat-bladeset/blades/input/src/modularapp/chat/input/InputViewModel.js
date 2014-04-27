@@ -9,9 +9,28 @@ function InputViewModel() {
 	this._userService = ServiceRegistry.getService( 'user.service' );
 
 	this.message = ko.observable( '' );
+	this.enabled = ko.observable( false );
 
-	this._currentUser = this._userService.getCurrentUser();
+	this._currentUser = null;
+
+	this._userService.getCurrentUser( this );
 }
+
+/**
+ * @see userservice.GetUserListener.userRetrieved
+ */
+InputViewModel.prototype.userRetrieved = function( user ) {
+	this._currentUser = user;
+	this.enabled( true );
+};
+
+/**
+ * @see userservice.GetUserListener.userRetrievalFailed
+ */
+InputViewModel.prototype.userRetrievalFailed = function( ) {
+	// unexpected
+	throw new Error( 'Could not get current user' );
+};
 
 InputViewModel.prototype.buttonClicked = function() {
 	if( this._currentUser === null ) {

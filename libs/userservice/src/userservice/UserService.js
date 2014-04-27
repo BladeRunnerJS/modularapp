@@ -9,7 +9,7 @@ function UserService() {
 /**
  * Sets the active user for the current application session.
  *
- * @param {userservice.User} user
+ * @param {userservice.User} user The to set as the current user.
  */
 UserService.prototype.setCurrentUser = function( user ) {
 };
@@ -17,10 +17,13 @@ UserService.prototype.setCurrentUser = function( user ) {
 /**
  * Get the current user of the application.
  *
- * @returns {userservice.User} The current user
- * @throws {Error} if the user has not been set
+ * @param {userservice.GetUserListener} listener The listener for the user
+ *        retrieval result.
+ *
+ * @throws {Error} If there is no way to get the current user e.g. the
+ * current user has not been set via {@see setCurrentUser}.
  */
-UserService.prototype.getCurrentUser = function() {
+UserService.prototype.getCurrentUser = function( listener ) {
 };
 
 /**

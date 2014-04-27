@@ -35,13 +35,13 @@
 			var workbench = new Workbench(250, 310);
 			addEventHubLogger( workbench );
 
-			// ViewModel that is being created in the workbench
-			var InputViewModel = require( 'modularapp/chat/input/InputViewModel' );
-			var KnockoutComponent = require( 'br/knockout/KnockoutComponent' );
-
 			var userService = ServiceRegistry.getService( 'user.service' );
 			var testUser = { userId: 'Guest_' + new Date().getTime() };
 			userService.setCurrentUser( testUser );
+
+			// ViewModel that is being created in the workbench
+			var InputViewModel = require( 'modularapp/chat/input/InputViewModel' );
+			var KnockoutComponent = require( 'br/knockout/KnockoutComponent' );
 
 			var model = new InputViewModel();
 			var component = new KnockoutComponent( 'modularapp.chat.input.view-template', model );
