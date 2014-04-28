@@ -1,15 +1,13 @@
-'user strict';
+'use strict';
 
 var br = require( 'br/Core' );
-var Firebase = require( 'firebase' );
 var emitr = require( 'emitr' );
 
 var UserService = require( 'userservice/UserService' );
 var User = require( 'userservice/User' );
 var GetUserListener = require( 'userservice/GetUserListener' );
+var GetUserErrorCodes = require( 'userservice/GetUserErrorCodes' );
 var GitHubUserFetcher = require( 'userservice/GitHubUserFetcher' );
-
-var ChatService = require( 'chatservice/ChatService' );
 
 var Presence = require( './Presence' );
 var Log = require( 'fell' ).Log;
@@ -39,6 +37,7 @@ FireUserService.prototype.setCurrentUser = function( user ) {
   }
 
   this._currentUser = user;
+  this._users[ this._currentUser.userId ] = this._currentUser;
 
   this._firebase = FirebaseService.getFirebase();
   this._presence = new Presence( this._firebase, user.userId, {}, this );
@@ -52,7 +51,7 @@ FireUserService.prototype.getCurrentUser = function( listener ) {
     throw new Error( 'currentUser has not been set.' );
   }
 
-  return this._currentUser;
+  this.getUser( this._currentUser.userId, listener );
 };
 
 /**
@@ -69,46 +68,26 @@ FireUserService.prototype.getUsers = function( listener ) {
  */
 FireUserService.prototype.getUser = function( userId, listener ) {
   if( !br.fulfills( listener, GetUserListener.prototype ) ) {
-    throw new Error( 'listener must fulfil the GetUserListener contract: ' +
-                       JSON.stringify( GetUserListener )
-                    );
+    throw new Error( 'listener must fulfil the GetUserListener contract' );
   }
 
-  var user = this._users[ userId ];
-
-  if( user ) {
-    this._getUserData( user, listener );
-  }
-  else {
-    // fake async
-    setTimeout( function() {
-      listener.userRetrievalFailed(
-        GetUserErrorCodes.NOT_FOUND,
-        'User with userId ' + userId + ' not found'
-      );
-    }, 0 );
-  }
-};
-
-/**
- * @private
- */
-FireUserService.prototype._getUserData = function( user, listener ) {
-
-  this._gitHubUserFetcher.getUser( user.userId, {
+  var self = this;
+  this._gitHubUserFetcher.getUser( userId, {
     requestSucceeded: function( response ) {
+      var user = self._users[ userId ] || {};
       user.data = response;
+      self._users[ userId ] = user;
       listener.userRetrieved( user );
     },
     requestFailed: function() {
       listener.userRetrievalFailed(
         GetUserErrorCodes.NOT_FOUND,
-        'User data for user with userId ' + userId + ' not found'
+        'User data for user with userId ' + user.userId + ' not found'
       );
     }
   } );
 
-}
+};
 
 // Presence Listener definitions
 

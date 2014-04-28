@@ -47,14 +47,12 @@ FakeUserServiceTest.prototype.testUserCannotBeAddedTwice = function() {
 	assertException( test, 'Error' );
 };
 
-FakeUserServiceTest.prototype.testCanSetAndGetCurrentUser = function() {
-	var service = new FakeUserService();
-	var expectedUser = new User( "testUser" );
-
-	service.setCurrentUser( expectedUser );
-
-	var currentUser = service.getCurrentUser();
-	assertEquals( expectedUser, currentUser );
+FakeUserServiceTest.prototype.testErrorWillBeThrownIfGetUserIsCalledBeforeSetCurrentUser = function() {
+	var test = function() {
+		var service = new FakeUserService();
+		service.getCurrentUser();
+	};
+	assertException( 'Error', test );
 };
 
 FakeUserServiceTest.prototype.testGetUserThrowsErrorIfListenerDoesNotFulfilGetUserListener = function() {
@@ -67,6 +65,29 @@ FakeUserServiceTest.prototype.testGetUserThrowsErrorIfListenerDoesNotFulfilGetUs
 };
 
 var FakeUserServiceAsyncTest = AsyncTestCase('FakeUserServiceAsyncTest');
+
+FakeUserServiceAsyncTest.prototype.testCanSetAndGetCurrentUser = function( queue ) {
+
+	var service = new FakeUserService();
+	var userId = 'testUser';
+	var expectedUser = new User( userId );
+
+	service.setCurrentUser( expectedUser );
+
+	queue.call( 'Step 1: make request for user', function( callbacks ) {
+
+		var userRetrievedCallback = callbacks.add( function( currentUser ) {
+			assertEquals( expectedUser, currentUser );
+		} );
+
+		service.getCurrentUser( {
+			userRetrieved: userRetrievedCallback,
+			userRetrievalFailed: function() {}
+		} );
+
+	} );
+
+};
 
 FakeUserServiceAsyncTest.prototype.testCanAddAndGetUsers = function( queue ) {
 	var service = new FakeUserService();
@@ -96,16 +117,6 @@ FakeUserServiceAsyncTest.prototype.testCanAddAndGetUsers = function( queue ) {
 FakeUserServiceAsyncTest.prototype.testValidUserCanBeRetrieved = function( queue ) {
 	var user1Id = 'testUser1';
 	var expectedUser1 = new User( user1Id );
-
-	var stubFetcher = {}
-	stubFetcher.getUser = function( userId, listener ) {
-		listener.requestSucceeded( {
-			login: userId,
-			name: 'Test User'
-		} );
-	};
-
-	ServiceRegistry.registerService( 'github.userfetcher', stubFetcher );
 
 	var service = new FakeUserService();
 	service.addUser( expectedUser1 );

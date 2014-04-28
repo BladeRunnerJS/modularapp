@@ -1,23 +1,40 @@
 'use strict';
 
-var br = require( 'br/Core' );
 var ko = require( 'ko' );
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 var Log = require( 'fell' ).Log;
-var User = require( 'userservice/User' );
 
 function InputViewModel() {
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
 	this._userService = ServiceRegistry.getService( 'user.service' );
 
 	this.message = ko.observable( '' );
+	this.enabled = ko.observable( false );
+	this.feedbackMessage = ko.observable( '' );
 
-	this._currentUser = this._userService.getCurrentUser();
+	this._currentUser = null;
+
+	this._userService.getCurrentUser( this );
 }
+
+/**
+ * @see userservice.GetUserListener.userRetrieved
+ */
+InputViewModel.prototype.userRetrieved = function( user ) {
+	this._currentUser = user;
+	this.enabled( true );
+};
+
+/**
+ * @see userservice.GetUserListener.userRetrievalFailed
+ */
+InputViewModel.prototype.userRetrievalFailed = function( ) {
+	this.feedbackMessage( 'Could not get current user. Chat input disabled.' );
+};
 
 InputViewModel.prototype.buttonClicked = function() {
 	if( this._currentUser === null ) {
-		throw new Error( 'A currentUser must be set before messages can be sent' )
+		throw new Error( 'A currentUser must be set before messages can be sent' );
 	}
 
 	var message = this.message();

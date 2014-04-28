@@ -32,8 +32,6 @@ var MessageItemViewModel = require( './MessageItemViewModel' );
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 function MessagesViewModel() {
-	this.isScrolledToBottom = ko.observable( true );
-
 	this.messages = ko.observableArray( [] );
 
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
@@ -44,10 +42,10 @@ function MessagesViewModel() {
 
 MessagesViewModel.prototype.messagesRetrieved = function( messages ) {
 	messages.forEach( function( message ) {
-		this._addMessage( message );
+		this.addMessage( message );
 	}, this );
 
-	this._chatService.on( 'new-message', this._addMessage, this );
+	this._chatService.on( 'new-message', this.addMessage, this );
 };
 
 MessagesViewModel.prototype.userSelected = function( data, event ) {
@@ -61,7 +59,7 @@ MessagesViewModel.prototype.userSelected = function( data, event ) {
 	this._eventHub.channel( 'user' ).trigger( 'user-selected', eventData );
 };
 
-MessagesViewModel.prototype._addMessage = function( message ) {
+MessagesViewModel.prototype.addMessage = function( message ) {
 	var model = new MessageItemViewModel( message );
 	this.messages.push( model );
 };
