@@ -4,6 +4,7 @@ var br = require( 'br/Core' );
 var ChatService = require( './ChatService' );
 var emitr = require( 'emitr' );
 var Log = require( 'fell' ).Log;
+var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 /**
  * Events (via emitr):
@@ -11,6 +12,7 @@ var Log = require( 'fell' ).Log;
  */
 function FakeChatService() {
   this._messages = [];
+  this._eventHub = ServiceRegistry.getService( 'br.event-hub' );
 }
 br.implement( FakeChatService, ChatService );
 emitr.mixInto( FakeChatService );
@@ -24,7 +26,7 @@ FakeChatService.prototype.sendMessage = function( message ) {
   this._messages.push( message );
 
   Log.info( 'Trigger new-message: {0}', JSON.stringify( message ) );
-
+  this._eventHub.channel( 'new-channel' ).trigger( 'sendMessage', message );
   this.trigger( 'new-message', message );
 };
 
@@ -35,7 +37,7 @@ FakeChatService.prototype.sendMessage = function( message ) {
  *                            success or failure.
  */
 FakeChatService.prototype.getMessages = function( listener ) {
-  // fake async
+  // fake async 
   var self = this;
   setTimeout( function() {
     // shallow copy
