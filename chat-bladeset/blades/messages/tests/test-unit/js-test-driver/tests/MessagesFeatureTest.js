@@ -8,9 +8,14 @@ var ServiceRegistry = require( 'br/ServiceRegistry' );
 var eventHub = ServiceRegistry.getService( 'br.event-hub' );
 var userChannel = eventHub.channel( 'user' );
 
-describe('When a user is selected in the MessagesViewModel', function() {
+describe('The Messages', function() {
 
-  it( 'it triggers a "user-selected" event on a user channel on the EventHub', function() {
+  afterEach(function() {
+    var chatService = ServiceRegistry.getService( 'chat.service' );
+    chatService.fakeAsync = true;
+  } );
+
+  it( 'Should trigger a "user-selected" event on a user channel on the EventHub when a user is selected', function() {
 
     spyOn( eventHub, 'channel' ).andCallThrough();
     spyOn( userChannel, 'trigger' );
@@ -34,6 +39,23 @@ describe('When a user is selected in the MessagesViewModel', function() {
     };
     expect( eventHub.channel ).toHaveBeenCalledWith( 'user' );
     expect( userChannel.trigger ).toHaveBeenCalledWith( 'user-selected', expectedEventData );
+  } );
+
+  it( 'Should display new messages that are send via the Chat Service', function() {
+    // Setup
+    var chatService = ServiceRegistry.getService( 'chat.service' );
+    chatService.fakeAsync = false;
+    var messagesViewModel = new MessagesViewModel();
+    var message = { userId: 'testUserId', text: 'testUserText', timestamp: new Date() };
+
+    // Execute
+    chatService.sendMessage( message );
+
+    // Assert
+    var firstMessage = messagesViewModel.messages()[ 0 ];
+    expect( firstMessage.userId() ).toBe( message.userId );
+    expect( firstMessage.text() ).toBe( message.text );
+    expect( firstMessage.timestamp() ).toBeTruthy();
   } );
 
 });
