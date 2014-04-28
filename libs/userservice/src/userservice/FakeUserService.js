@@ -25,7 +25,7 @@ FakeUserService.prototype.reset = function() {
   this._users = {};
   this._currentUser = null;
   this._userDataFetcher = null;
-}
+};
 
 /**
  * Instructs the User service to retrieve data from a provider.
@@ -114,10 +114,14 @@ FakeUserService.prototype.setCurrentUser = function( user ) {
  */
 FakeUserService.prototype.getCurrentUser = function( listener ) {
   if( !this._currentUserId ) {
-    throw new Error( 'the currentUser has not been set' );
+    asyncUserRetrievalFailed( listener,
+                         GetUserErrorCodes.NOT_FOUND,
+                         'User data for user with userId ' + this._currentUserId + ' not found'
+                       );
   }
-
-  this.getUser( this._currentUserId, listener );
+  else {
+    this.getUser( this._currentUserId, listener );
+  }
 };
 
 /**
@@ -147,13 +151,9 @@ FakeUserService.prototype.getUser = function( userId, listener ) {
     this._getUserData( user, listener );
   }
   else {
-    // fake async
-    setTimeout( function() {
-      listener.userRetrievalFailed(
-        GetUserErrorCodes.NOT_FOUND,
-        'User with userId ' + userId + ' not found'
-      );
-    }, 0 );
+    asyncUserRetrievalFailed( listener,
+                         GetUserErrorCodes.NOT_FOUND,
+                         'User with userId ' + userId + ' not found' );
   }
 
 };
@@ -171,9 +171,9 @@ FakeUserService.prototype._getUserData = function( user, listener ) {
         listener.userRetrieved( user );
       },
       requestFailed: function() {
-        listener.userRetrievalFailed(
-          GetUserErrorCodes.NOT_FOUND,
-          'User data for user with userId ' + user.userId + ' not found'
+        userRetrievalFailed( listener,
+                             GetUserErrorCodes.NOT_FOUND,
+                             'User data for user with userId ' + user.userId + ' not found'
         );
       }
     } );
@@ -218,6 +218,16 @@ function checkUser( user ) {
     var expectedContract = JSON.stringify( User, null, 2 );
     throw new Error( 'The user must fulfill the contract of a User: ' + expectedContract );
   }
+}
+
+function userRetrievalFailed( listener, code, message ) {
+  listener.userRetrievalFailed( code, message );
+}
+
+function asyncUserRetrievalFailed( listener, code, message ) {
+  setTimeout( function() {
+    userRetrievalFailed( listener, code, message );
+  }, 0 );
 }
 
 module.exports = FakeUserService;
