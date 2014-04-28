@@ -1,7 +1,6 @@
 'use strict';
 
 var br = require( 'br/Core' );
-var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 var UserService = require( './UserService' );
 var GetUserListener = require( './GetUserListener' );
@@ -11,16 +10,91 @@ var User = require( './User' );
 
 function FakeUserService() {
   this._users = {};
+  this._currentUserId = null;
 
-  this._gitHubUserFetcher = null;
-  if( ServiceRegistry.isServiceRegistered( 'github.userfetcher' ) ) {
-    this._gitHubUserFetcher = ServiceRegistry.getService( 'github.userfetcher' )
-  }
-  else {
-    this._gitHubUserFetcher = new GitHubUserFetcher();
-  }
+  this._userDataFetcher = null;
 }
 br.implement( FakeUserService, UserService );
+
+// Helper functions: used for development and testing.
+
+/**
+ * Reset state e.g. list of users and current user.
+ */
+FakeUserService.prototype.reset = function() {
+  this._users = {};
+  this._currentUser = null;
+  this._userDataFetcher = null;
+}
+
+/**
+ * Instructs the User service to retrieve data from a provider.
+ *
+ * @param {string} provider - if the value is 'github' it will get the data from
+ *      GitHub. Any other value will result in no fetcher being used and fake
+ *      user data being returned for any {@see getUser} request.
+ * @param {object} options - a list of options that any fetcher may take
+ */
+FakeUserService.prototype.setUserDataFetcher = function( provider, options ) {
+  options = options || {};
+
+  if( provider === 'github' ) {
+    this._userDataFetcher = new GitHubUserFetcher( options );
+  }
+  else if( provider === 'failing' ) {
+
+    var service = this;
+    this._userDataFetcher = {
+      count: 0,
+      resetAt: options.count,
+      getUser: function( userId, listener ) {
+        ++this.count;
+        var shouldReset = ( this.count === this.resetAt );
+
+        // setTimeout( function() {
+          listener.requestFailed();
+          if( shouldReset ) {
+            service._userDataFetcher = null;
+          }
+        // }, 0 );
+
+      }
+    };
+
+  }
+  else {
+    this._userDataFetcher = null;
+  }
+};
+
+/**
+ * Helper function.
+ *
+ * Add a user to the current session. This indicates another user
+ * that is using the application in another location.
+ *
+ * @param {userservice.User} user
+ */
+FakeUserService.prototype.addUser = function( user ) {
+  checkUser( user );
+
+  if( this._users[ user.userId ] !== undefined ) {
+    throw new Error( 'A User with a userId of "' + user.userId + '" is already present.' );
+  }
+
+  this._users[ user.userId ] = user;
+};
+
+/**
+ * Has the user been added to the user service.
+ *
+ * @param {string} userId the ID of the user to check.
+ *
+ * @returns {boolean} true or false
+ */
+FakeUserService.prototype.userExists = function( userId ) {
+  return ( this._users[ userId ] !== undefined );
+};
 
 // UserService definitions
 
@@ -38,13 +112,12 @@ FakeUserService.prototype.setCurrentUser = function( user ) {
 /**
  * @see {UserService.getCurrentUser}
  */
-FakeUserService.prototype.getCurrentUser = function() {
+FakeUserService.prototype.getCurrentUser = function( listener ) {
   if( !this._currentUserId ) {
     throw new Error( 'the currentUser has not been set' );
   }
 
-  var user = this._users[ this._currentUserId ];
-  return user;
+  this.getUser( this._currentUserId, listener );
 };
 
 /**
@@ -65,9 +138,7 @@ FakeUserService.prototype.getUsers = function( listener ) {
 FakeUserService.prototype.getUser = function( userId, listener ) {
 
   if( !br.fulfills( listener, GetUserListener.prototype ) ) {
-    throw new Error( 'listener must fulfil the GetUserListener contract: ' +
-                       JSON.stringify( GetUserListener)
-                    );
+    throw new Error( 'listener must fulfil the GetUserListener contract' );
   }
 
   var user = this._users[ userId ];
@@ -92,53 +163,37 @@ FakeUserService.prototype.getUser = function( userId, listener ) {
  */
 FakeUserService.prototype._getUserData = function( user, listener ) {
 
-  this._gitHubUserFetcher.getUser( user.userId, {
-    requestSucceeded: function( response ) {
-      user.data = response;
-      listener.userRetrieved( user );
-    },
-    requestFailed: function() {
-      listener.userRetrievalFailed(
-        GetUserErrorCodes.NOT_FOUND,
-        'User data for user with userId ' + userId + ' not found'
-      );
-    }
-  } );
+  if( this._userDataFetcher ) {
 
-}
+    this._userDataFetcher.getUser( user.userId, {
+      requestSucceeded: function( response ) {
+        user.data = response;
+        listener.userRetrieved( user );
+      },
+      requestFailed: function() {
+        listener.userRetrievalFailed(
+          GetUserErrorCodes.NOT_FOUND,
+          'User data for user with userId ' + user.userId + ' not found'
+        );
+      }
+    } );
 
-// Helper functions: used for development and testing.
-
-/**
- * Helper function.
- *
- * Add a user to the current session. This indicates another user
- * that is using the application in another location.
- *
- * @param {userservice.User} user
- */
-FakeUserService.prototype.addUser = function( user ) {
-  checkUser( user );
-
-  if( this._users[ user.userId ] !== undefined ) {
-    throw new Error( 'A User with a userId of "' + user.userId + '" is already present.' );
   }
+  else {
 
-  this._users[ user.userId ] = user;
+    setTimeout( function() {
+      user.data = {
+        login: user.userId,
+        name: 'Guest or Test',
+        avatar_url: 'http://www.netanimations.net/Animated-head-bobbing-cat-with-headphones-3.GIF'
+      };
+      listener.userRetrieved( user );
+    }, 0 );
 
-  this._gitHubUserFetcher.getUser( user.userId, this );
+  }
 };
 
-/**
- * Has the user been added to the user service.
- *
- * @param {string} userId the ID of the user to check.
- *
- * @returns {boolean} true or false
- */
-FakeUserService.prototype.userExists = function( userId ) {
-  return ( this._users[ userId ] !== undefined );
-};
+// ResponseListener
 
 /**
  * @see {httpservice.ResponseListener.requestSucceeded}

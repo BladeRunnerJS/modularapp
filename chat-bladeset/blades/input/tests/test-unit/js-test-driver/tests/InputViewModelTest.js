@@ -9,9 +9,12 @@ InputViewModelTest.prototype.setUp = function() {
   var userService = ServiceRegistry.getService( 'user.service' );
 
   var user = { userId: 'testUser' };
+  // Set in order to stop exceptions from service
   userService.setCurrentUser( user );
 
   model = new InputViewModel();
+  // set in order to all buttonClicked tests to be performed
+  model.userRetrieved( user );
 };
 
 // Note: ServiceRegistry is cleared down for each test by the test runtime.
