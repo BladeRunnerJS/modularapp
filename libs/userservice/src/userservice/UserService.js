@@ -19,9 +19,6 @@ UserService.prototype.setCurrentUser = function( user ) {
  *
  * @param {userservice.GetUserListener} listener The listener for the user
  *        retrieval result.
- *
- * @throws {Error} If there is no way to get the current user e.g. the
- * current user has not been set via {@see setCurrentUser}.
  */
 UserService.prototype.getCurrentUser = function( listener ) {
 };

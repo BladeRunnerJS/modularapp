@@ -33,6 +33,9 @@ var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 function MessagesViewModel() {
 	this.messages = ko.observableArray( [] );
+	this.showNoMessages = ko.computed( function() {
+		return ( this.messages().length === 0 );
+	}, this );
 
 	this._chatService = ServiceRegistry.getService( 'chat.service' );
 	this._chatService.getMessages( this );

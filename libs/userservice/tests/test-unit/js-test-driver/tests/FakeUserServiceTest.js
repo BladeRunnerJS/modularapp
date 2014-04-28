@@ -47,14 +47,6 @@ FakeUserServiceTest.prototype.testUserCannotBeAddedTwice = function() {
 	assertException( test, 'Error' );
 };
 
-FakeUserServiceTest.prototype.testErrorWillBeThrownIfGetUserIsCalledBeforeSetCurrentUser = function() {
-	var test = function() {
-		var service = new FakeUserService();
-		service.getCurrentUser();
-	};
-	assertException( 'Error', test );
-};
-
 FakeUserServiceTest.prototype.testGetUserThrowsErrorIfListenerDoesNotFulfilGetUserListener = function() {
 	var test = function() {
 		var service = new FakeUserService();
