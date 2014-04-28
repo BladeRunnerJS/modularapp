@@ -13,6 +13,7 @@ var ServiceRegistry = require( 'br/ServiceRegistry' );
 function FakeChatService() {
   this._messages = [];
   this._eventHub = ServiceRegistry.getService( 'br.event-hub' );
+  this.fakeAsync = true;
 }
 br.implement( FakeChatService, ChatService );
 emitr.mixInto( FakeChatService );
@@ -37,12 +38,17 @@ FakeChatService.prototype.sendMessage = function( message ) {
  *                            success or failure.
  */
 FakeChatService.prototype.getMessages = function( listener ) {
-  // fake async 
   var self = this;
-  setTimeout( function() {
-    // shallow copy
+  if( this.fakeAsync ) {
+    // fake async
+    setTimeout( function() {
+      // shallow copy
+      listener.messagesRetrieved( self._messages.slice( 0 ) );
+    }, 0 );
+  }
+  else {
     listener.messagesRetrieved( self._messages.slice( 0 ) );
-  }, 0 );
+  }
 };
 
 module.exports = FakeChatService;

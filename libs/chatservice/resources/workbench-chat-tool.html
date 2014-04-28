@@ -1,8 +1,11 @@
 <script id="chatservice.workbench-chat-tool" type="text/html">
 <div>
-	<input type="text" size="40" data-bind="value: message"/>
-<br/>
-	<button class="btn" data-bind="click:receive">Receive</button>
+	<label>userId:</label><br />
+	<input type="text" size="20" data-bind="value: userId"/><br /><br />
+
+	<label>message:</label><br />
+	<textarea data-bind="value: message"></textarea>
+	<br/>
 	<button class="btn" data-bind="click:send">Send</button>
 </div>
 </script>
