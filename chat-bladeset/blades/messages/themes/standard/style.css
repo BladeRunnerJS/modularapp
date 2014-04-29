@@ -1,19 +1,19 @@
 /* Message Blade container element */
-.messages {
+.chat-messages {
   min-width: 400px;
   height: 200px;
   overflow: auto;
 }
 
 /* individual message */
-.message {
+.chat-message {
   position: relative;
   overflow: auto;
 
   margin-bottom: 10px;
 }
 
-.message-user-id {
+.chat-message-user-id {
   position: absolute;
   top: 0;
   left: 0;
@@ -26,11 +26,11 @@
   cursor: pointer;
 }
 
-.message-user-id:after {
+.chat-message-user-id:after {
   content:': ';
 }
 
-.message-text {
+.chat-message-text {
   display: inline-block;
 
   -webkit-box-sizing: border-box;
@@ -46,7 +46,7 @@
   min-width: 200px
 }
 
-.message-timestamp {
+.chat-message-timestamp {
   position: absolute;
   top: 0;
   right: 0;

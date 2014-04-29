@@ -69,7 +69,7 @@ FakeUserServiceAsyncTest.prototype.testCanSetAndGetCurrentUser = function( queue
 	queue.call( 'Step 1: make request for user', function( callbacks ) {
 
 		var userRetrievedCallback = callbacks.add( function( currentUser ) {
-			assertEquals( expectedUser, currentUser );
+			assertTrue( expectedUser === currentUser );
 		} );
 
 		service.getCurrentUser( {
@@ -128,20 +128,49 @@ FakeUserServiceAsyncTest.prototype.testValidUserCanBeRetrieved = function( queue
 
 };
 
-FakeUserServiceAsyncTest.prototype.testInvalidUserResultsInUserRetrievalFailed = function( queue ) {
+FakeUserServiceAsyncTest.prototype.testFakeServiceCanBeSetToCallUserRetrievalFailed = function() {
 	var service = new FakeUserService();
+	service.setUserDataFetcher( 'failing', { count: 1 } );
 
-	queue.call( 'Step 1: make request for user with userId that does not exist', function( callbacks ) {
-
-		var userRetrievedCallback = callbacks.add( function( code, message ) {
+	service.getUser( 'blah-blah-blah', {
+		userRetrieved: function(){},
+		userRetrievalFailed: function( code, message ) {
 			assertEquals( GetUserErrorCodes.NOT_FOUND, code );
-		} );
+		}
+	} );
+};
 
-		service.getUser( 'blah-blah-blah', {
-			userRetrieved: function(){},
-			userRetrievalFailed: userRetrievedCallback
-		} );
+FakeUserServiceAsyncTest.prototype.testFakeServiceFetcherFailedCount = function( queue ) {
 
+	var service = new FakeUserService();
+	service.setUserDataFetcher( 'failing', { count: 2 } );
+
+	var results = [];
+	var testUserId = 'blah';
+
+	var failListener = {
+		userRetrieved: function(){},
+		userRetrievalFailed: function( code, message ) {
+			results.push( 'failed' );
+		}
+	};
+
+	var passListener = {
+		userRetrieved: function(){
+			results.push( 'passed' );
+
+			assertEquals( 'failed', results[ 0 ] );
+			assertEquals( 'failed', results[ 1 ] );
+			assertEquals( 'passed', results[ 2 ] );
+			assertEquals( 3, results.length );
+		},
+		userRetrievalFailed: function( code, message ) {}
+	};
+
+	service.getUser( testUserId, failListener );
+	service.getUser( testUserId, failListener );
+	queue.call( 'wait for async userRetrieved successful callback', function() {
+			service.getUser( testUserId, passListener );
 	} );
 
 };

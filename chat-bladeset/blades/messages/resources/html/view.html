@@ -1,17 +1,17 @@
 <div id="modularapp.chat.messages.view-template">
 
-	<section class="messages" data-bind="maintainScrollBottom: messages">
+	<section class="chat-messages" data-bind="maintainScrollBottom: messages">
 
-		<div class="messages-container" data-bind="foreach: messages">
-			<div class="message">
-				<span class="message-user-id"
+		<div class="chat-messages-container" data-bind="foreach: messages">
+			<div class="chat-message">
+				<span class="chat-message-user-id"
 							data-bind="text: userId, click: $parent.userSelected.bind( $parent )"></span>
-				<span class="message-text" data-bind="text: text"></span>
-				<span class="message-timestamp" data-bind="text: timestamp"></span>
+				<span class="chat-message-text" data-bind="text: text"></span>
+				<span class="chat-message-timestamp" data-bind="text: timestamp"></span>
 			</div>
   	</div>
 
-		<div class="messages-no-messages" data-bind="visible: showNoMessages">
+		<div class="chat-messages-no-messages" data-bind="visible: showNoMessages">
 			Nobody's chatting!
 		</div>
 
