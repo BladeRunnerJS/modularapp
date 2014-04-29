@@ -40,12 +40,10 @@
 			var KnockoutComponent = require( 'br/knockout/KnockoutComponent' );
 
 			var userService = ServiceRegistry.getService( 'user.service' );
-			var testUser = { userId: 'leggetter' };
-			userService.setCurrentUser( testUser );
+			userService.setUserDataFetcher( 'github' );
 
 			var model = new UsercardViewModel();
 			model.cardShown( true );
-
 
 			var component = new KnockoutComponent( 'modularapp.chat.usercard.view-template', model );
 

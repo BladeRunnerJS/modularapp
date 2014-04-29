@@ -145,48 +145,41 @@ FakeUserService.prototype.getUser = function( userId, listener ) {
     throw new Error( 'listener must fulfil the GetUserListener contract' );
   }
 
-  var user = this._users[ userId ];
-
-  if( user ) {
-    this._getUserData( user, listener );
-  }
-  else {
-    asyncUserRetrievalFailed( listener,
-                         GetUserErrorCodes.NOT_FOUND,
-                         'User with userId ' + userId + ' not found' );
-  }
-
+  this._getUserData( userId, listener );
 };
 
 /**
  * @private
  */
-FakeUserService.prototype._getUserData = function( user, listener ) {
+FakeUserService.prototype._getUserData = function( userId, listener ) {
 
   if( this._userDataFetcher ) {
 
-    this._userDataFetcher.getUser( user.userId, {
+    var self = this;
+    this._userDataFetcher.getUser( userId, {
       requestSucceeded: function( response ) {
-        user.data = response;
+        var user = {
+          userId: userId,
+          data: response
+        };
+        self._users[ userId ] = user;
         listener.userRetrieved( user );
       },
       requestFailed: function() {
         userRetrievalFailed( listener,
                              GetUserErrorCodes.NOT_FOUND,
-                             'User data for user with userId ' + user.userId + ' not found'
+                             'User data for user with userId ' + userId + ' not found'
         );
       }
     } );
 
   }
   else {
+    var user = this._users[ userId ] || {};
+    user.userId = userId;
+    user.data = user.data || getFakeUserData( userId );
 
     setTimeout( function() {
-      user.data = {
-        login: user.userId,
-        name: 'Guest or Test',
-        avatar_url: 'http://www.netanimations.net/Animated-head-bobbing-cat-with-headphones-3.GIF'
-      };
       listener.userRetrieved( user );
     }, 0 );
 
@@ -212,6 +205,17 @@ FakeUserService.prototype.requestFailed = function( error ) {
 };
 
 // Private non-instance functions
+
+function getFakeUserData( userId ) {
+  return {
+    login: userId,
+    name: 'Sweets the Rockin\' Cat',
+    avatar_url: 'http://www.netanimations.net/Animated-head-bobbing-cat-with-headphones-3.GIF',
+    company: 'Yo Dude!',
+    email: 'sweets@example.com',
+    location: 'Scotland'
+  };
+}
 
 function checkUser( user ) {
   if( br.fulfills( user, User.prototype ) === false ) {

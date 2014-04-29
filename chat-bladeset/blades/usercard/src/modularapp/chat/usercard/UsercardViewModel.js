@@ -1,7 +1,5 @@
 'use strict';
 
-require( 'bootstrap' );
-
 var ko = require( 'ko' );
 
 var ServiceRegistry = require( 'br/ServiceRegistry' );
@@ -9,17 +7,18 @@ var ServiceRegistry = require( 'br/ServiceRegistry' );
 var POSITION_DEFAULT = { x: '50%', y: 0 };
 
 function UsercardViewModel() {
-	this.userInfo = ko.observable();
-	this.position = ko.observable( pixelify( POSITION_DEFAULT ) );
+	this.avatarUrl = ko.observable('');
+	this.name = ko.observable('');
+	this.company = ko.observable('');
+	this.email = ko.observable('');
+	this.location = ko.observable('');
 
+	this.position = ko.observable( pixelify( POSITION_DEFAULT ) );
 	this.cardShown = ko.observable( false );
-	this.hasUserInfo = ko.computed( function() {
-		return ( this.cardShown() && this.userInfo() );
-	}, this )
 
 	this._userService = ServiceRegistry.getService( 'user.service' );
+	
 	this._eventHub = ServiceRegistry.getService( 'br.event-hub' );
-
 	this._eventHub.channel( 'user' ).on( 'user-selected', this.userSelected, this );
 }
 
@@ -41,7 +40,11 @@ UsercardViewModel.prototype.userSelected = function( data ) {
  * @see {userservice.GetUserListener.userRetrieved}
  */
 UsercardViewModel.prototype.userRetrieved = function( user ) {
-	this.userInfo( user );
+	this.avatarUrl( user.data.avatar_url );
+	this.name( user.data.name );
+	this.company( user.data.company );
+	this.email( user.data.email );
+	this.location( user.data.location );
 	this.cardShown( true );
 };
 
@@ -61,6 +64,9 @@ function pixelify( pos ) {
 		// only add px to number values
 		if( isNaN( value ) === false ) {
 			newPos[ prop ] = value + 'px';
+		}
+		else {
+			newPos[ prop ] = value;
 		}
 	}
 	return newPos;

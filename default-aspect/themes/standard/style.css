@@ -4,7 +4,7 @@ body {
   padding: 0px 40px;
 }
 
-.header {
+.chat-header {
   display: block;
 
   margin-bottom:20px;
@@ -23,11 +23,11 @@ body {
 }
 
 .chat-input,
-.messages {
+.chat-messages {
   display: block;
 }
 
-.messages {
+.chat-messages {
   margin-bottom: 20px;
 }
 

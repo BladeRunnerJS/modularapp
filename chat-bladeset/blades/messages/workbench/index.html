@@ -26,12 +26,6 @@
 				var presentationModelViewer = new PresentationModelViewer(model, KnockoutModelTree);
 				workbench.addToRightWing( presentationModelViewer, "Visualise Knockout View Model", false);
 			}
-			
-			function addChatTool(workbench ) {
-				var ChatWorkbenchTool = require( 'chatservice/ChatWorkbenchTool' );
-				var tool = new ChatWorkbenchTool();
-				workbench.addToLeftWing( tool, "Chatting", false);
-			}
 
 			function addComponent( component, workbench  ) {
 				workbench.displayComponent( component, 200, 100 );
@@ -54,6 +48,13 @@
 
 			addComponent( component, workbench )
 			addModelViewer( model, workbench );
+
+			function addChatTool(workbench ) {
+				var ChatWorkbenchTool = require( 'chatservice/ChatWorkbenchTool' );
+				var tool = new ChatWorkbenchTool();
+				workbench.addToLeftWing( tool, "Chatting", false);
+			}
+
 			addChatTool( workbench );
 		</script>
 	</body>
