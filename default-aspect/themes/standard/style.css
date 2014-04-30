@@ -31,4 +31,8 @@ body {
   margin-bottom: 20px;
 }
 
+.chat-message:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
 .chat-input {}
