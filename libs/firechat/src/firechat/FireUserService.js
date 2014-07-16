@@ -80,6 +80,7 @@ FireUserService.prototype.getUser = function( userId, listener ) {
       listener.userRetrieved( user );
     },
     requestFailed: function() {
+      var user = self._users[ userId ] || {};
       listener.userRetrievalFailed(
         GetUserErrorCodes.NOT_FOUND,
         'User data for user with userId ' + user.userId + ' not found'
