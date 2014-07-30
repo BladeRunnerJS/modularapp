@@ -4,17 +4,21 @@ var InputViewModel = require( 'modularapp/chat/input/InputViewModel' );
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 var model = null;
+var serviceInitialised = false;
 
 InputViewModelTest.prototype.setUp = function() {
-  var userService = ServiceRegistry.getService( 'user.service' );
+    var user = { userId: 'testUser' };
+    
+    if (!serviceInitialised) {
+        var userService = ServiceRegistry.getService( 'user.service' );
+        // Set in order to stop exceptions from service
+        userService.setCurrentUser( user );
+        serviceInitialised = true;
+    }
 
-  var user = { userId: 'testUser' };
-  // Set in order to stop exceptions from service
-  userService.setCurrentUser( user );
-
-  model = new InputViewModel();
-  // set in order to all buttonClicked tests to be performed
-  model.userRetrieved( user );
+    model = new InputViewModel();
+    // set in order to all buttonClicked tests to be performed
+    model.userRetrieved( user );
 };
 
 // Note: ServiceRegistry is cleared down for each test by the test runtime.
