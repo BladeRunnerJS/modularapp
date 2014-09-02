@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<@base.tag@/>
+		<meta charset="UTF-8">
+
+		<title>Workbench</title>
+
+		<@css.bundle theme="black"@/>
+
+	</head>
+	<body>
+
+		<@js.bundle @/>
+
+		<script type="text/javascript">
+			var ServiceRegistry = require( 'br/ServiceRegistry' );
+
+			function addEventHubLogger( workbench ) {
+				var eventHub = ServiceRegistry.getService( 'br.event-hub' );
+				var EventHubViewer = require( 'br/workbench/tools/EventHubViewer' );
+				var eventHubViewer = new EventHubViewer( eventHub );
+				workbench.addToLeftWing( eventHubViewer, "EventHub Logging", false );
+			}
+
+			function addModelViewer( model, workbench ) {
+				var KnockoutModelTree = require( 'br/knockout/workbench/KnockoutModelTree' );
+				var PresentationModelViewer = require( 'br/presenter/workbench/ui/PresentationModelViewer' );
+				var presentationModelViewer = new PresentationModelViewer(model, KnockoutModelTree);
+				workbench.addToRightWing( presentationModelViewer, "Visualise Knockout View Model", false);
+			}
+
+			function addComponent( component, workbench  ) {
+				workbench.displayComponent( component, 200, 100 );
+			}
+
+			var Workbench = require( 'br/workbench/ui/Workbench' );
+			var workbench = new Workbench(250, 310);
+			addEventHubLogger( workbench );
+
+			// ViewModel that is being created in the workbench
+			var UsercardViewModel = require( 'modularapp/usercard/UsercardViewModel' );
+			var KnockoutComponent = require( 'br/knockout/KnockoutComponent' );
+
+			var userService = ServiceRegistry.getService( 'user.service' );
+			userService.setUserDataFetcher( 'github' );
+
+			var model = new UsercardViewModel();
+			model.cardShown( true );
+
+			var component = new KnockoutComponent( 'modularapp.usercard.view-template', model );
+
+			addComponent( component, workbench )
+			addModelViewer( model, workbench );
+
+			function fakeTrigger() {
+				var userId = document.getElementById( 'user_id' ).value;
+
+				if( !userService.userExists( userId ) ) {
+					// only add if not already added
+					var testUser = { userId: userId };
+					userService.addUser( testUser );
+				}
+
+				ServiceRegistry.getService('br.event-hub')
+					.channel( 'user' )
+						.trigger( 'user-selected', { userId: userId } );
+			}
+
+			window.addEventListener( 'load', function() {
+				var buttonEl = document.createElement( 'button' );
+				buttonEl.addEventListener( 'click', fakeTrigger );
+				buttonEl.innerHTML = 'Fake Trigger';
+
+				var inputEl = document.createElement( 'input' );
+				inputEl.value = 'leggetter';
+				inputEl.id = 'user_id';
+
+				var leftWorkbenchPanel = document.getElementById( 'workbench-panel-0' );
+				leftWorkbenchPanel.appendChild( inputEl );
+				leftWorkbenchPanel.appendChild( buttonEl );
+			} )
+		</script>
+
+
+	</body>
+</html>

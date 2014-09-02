@@ -1,0 +1,15 @@
+<section class="chat-usercard"
+				 data-bind="visible: cardShown, style: { top: position().y, left: position().x }"
+				 id="modularapp.usercard.view-template">
+
+	<img class="usercard-avatar" data-bind="attr: { src: avatarUrl }" />
+	<div class="usercard-name" data-bind="text: name"></div>
+	<div class="usercard-company" data-bind="text: company"></div>
+	<div class="usercard-email" data-bind="text: email"></div>
+	<div class="usercard-location" data-bind="text: location"></div>
+
+	<button data-bind="click: closeClicked" class="btn btn-default btn-xs usercard-close-btn">
+			<span class="glyphicon glyphicon-remove"></span>
+	</button>
+
+</section>

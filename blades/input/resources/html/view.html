@@ -1,0 +1,9 @@
+<section class="chat-input" id="modularapp.input.view-template">
+	<textarea class="chat-input-message"
+						data-bind="value:message, enable:enabled"
+						placeholder="type a message"></textarea>
+	<button class="chat-input-send-btn"
+					data-bind="click:buttonClicked, enable:enabled">Send</button>
+	<span class="chat-input-feedback"
+				data-bind="visible:feedbackMessage, text: feedbackMessage"></span>
+</section>
