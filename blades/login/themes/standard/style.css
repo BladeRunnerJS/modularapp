@@ -1,0 +1,8 @@
+.chat-login {
+  text-align: center;
+}
+
+.chat-login .btn:hover,
+.chat-login .btn:focus {
+  color: #FFF !important;
+}
