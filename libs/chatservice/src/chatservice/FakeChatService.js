@@ -5,6 +5,7 @@ var ChatService = require( './ChatService' );
 var emitr = require( 'emitr' );
 var Log = require( 'fell' ).Log;
 var ServiceRegistry = require( 'br/ServiceRegistry' );
+var ChatMessage = require("./ChatMessage");
 
 /**
  * Events (via emitr):
@@ -24,6 +25,9 @@ emitr.mixInto( FakeChatService );
  * @param {ChatMessage} message - The message to send.
  */
 FakeChatService.prototype.sendMessage = function( message ) {
+  if (!br.fulfills(message, ChatMessage)) {
+      throw new Error("Message does not match the format: '"+JSON.stringify(this._messageFormat)+"'");
+  }
   this._messages.push( message );
 
   Log.info( 'Trigger new-message: {0}', JSON.stringify( message ) );

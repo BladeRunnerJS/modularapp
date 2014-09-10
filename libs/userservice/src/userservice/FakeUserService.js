@@ -76,6 +76,9 @@ FakeUserService.prototype.setUserDataFetcher = function( provider, options ) {
  * @param {userservice.User} user
  */
 FakeUserService.prototype.addUser = function( user ) {
+  if (!br.fulfills(user, User)) {
+    throw new Error("User does not match the format: '"+JSON.stringify(this._userFormat)+"'");
+  }
   checkUser( user );
 
   if( this._users[ user.userId ] !== undefined ) {
