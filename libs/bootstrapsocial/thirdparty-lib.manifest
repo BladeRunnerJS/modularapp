@@ -1,0 +1,2 @@
+#depends: bootstrap, fontawesome
+css: bootstrap-social.css

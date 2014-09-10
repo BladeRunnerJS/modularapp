@@ -1,0 +1,3 @@
+#depends: firebase
+js: firebase-simple-login.js
+exports: FirebaseSimpleLogin
