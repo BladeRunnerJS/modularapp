@@ -1,8 +1,10 @@
+(function() {
+  
 'use strict';
 
 require( 'jasmine' );
 
-var InputViewModel = require( 'modularapp/chat/input/InputViewModel');
+var InputViewModel = require( 'modularapp/input/InputViewModel');
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 var userService = ServiceRegistry.getService( 'user.service' );
 var chatService = ServiceRegistry.getService( 'chat.service' );
@@ -50,3 +52,5 @@ describe( 'The Input', function() {
   } );
 
 } );
+
+})();

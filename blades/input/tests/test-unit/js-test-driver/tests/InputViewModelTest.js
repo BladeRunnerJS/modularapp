@@ -1,6 +1,8 @@
+(function() {
+
 var InputViewModelTest = TestCase( 'InputViewModelTest' );
 
-var InputViewModel = require( 'modularapp/chat/input/InputViewModel' );
+var InputViewModel = require( 'modularapp/input/InputViewModel' );
 var ServiceRegistry = require( 'br/ServiceRegistry' );
 
 var model = null;
@@ -59,3 +61,5 @@ InputViewModelNoUserTest.prototype.testCurrentUserMustBeSetBeforeMessagesCanBeSe
   assertException( test, 'Error' );
 
 };
+
+})();
